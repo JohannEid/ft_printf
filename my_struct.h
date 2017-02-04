@@ -9,7 +9,7 @@
 struct t_array;
 typedef struct t_array s_array;
 
-void init_array( s_array *, size_t initial_size);
+void init_array( s_array *, size_t );
 void insert_in_array (s_array * , char );
 void free_array (s_array * );
 

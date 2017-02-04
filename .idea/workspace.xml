@@ -60,11 +60,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="my_struct.c" pinned="false" current-in-tab="false">
+      <file leaf-file-name="my_struct.c" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/my_struct.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="336">
-              <caret line="14" column="0" lean-forward="true" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
+            <state relative-caret-position="320">
+              <caret line="35" column="40" lean-forward="false" selection-start-line="35" selection-start-column="40" selection-end-line="35" selection-end-column="40" />
               <folding>
                 <element signature="e#41#58#0" expanded="true" />
               </folding>
@@ -72,11 +72,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="my_struct.h" pinned="false" current-in-tab="true">
+      <file leaf-file-name="my_struct.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/my_struct.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="336">
-              <caret line="14" column="0" lean-forward="true" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
+            <state relative-caret-position="432">
+              <caret line="18" column="0" lean-forward="true" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -100,8 +100,8 @@
         <option value="$PROJECT_DIR$/misc.h" />
         <option value="$PROJECT_DIR$/main.c" />
         <option value="$PROJECT_DIR$/misc.c" />
-        <option value="$PROJECT_DIR$/my_struct.c" />
         <option value="$PROJECT_DIR$/my_struct.h" />
+        <option value="$PROJECT_DIR$/my_struct.c" />
       </list>
     </option>
   </component>
@@ -337,12 +337,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1486207503355</updated>
-      <workItem from="1486207504955" duration="4941000" />
+      <workItem from="1486207504955" duration="5610000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="4941000" />
+    <option name="totallyTimeSpent" value="5610000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="65" y="24" width="1855" height="1056" extended-state="6" />
@@ -415,21 +415,21 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/my_struct.c">
+    <entry file="file://$PROJECT_DIR$/my_struct.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="336">
-          <caret line="14" column="0" lean-forward="true" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
-          <folding>
-            <element signature="e#41#58#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="432">
+          <caret line="18" column="0" lean-forward="true" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/my_struct.h">
+    <entry file="file://$PROJECT_DIR$/my_struct.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="336">
-          <caret line="14" column="0" lean-forward="true" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
-          <folding />
+        <state relative-caret-position="320">
+          <caret line="35" column="40" lean-forward="false" selection-start-line="35" selection-start-column="40" selection-end-line="35" selection-end-column="40" />
+          <folding>
+            <element signature="e#41#58#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
