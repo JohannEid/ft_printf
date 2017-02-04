@@ -30,20 +30,15 @@ const size_t size_of_string(const char *to_size) {
 }
 
 
-void search_for_expression(const char *to_search) {
-    s_array  my_array;
+const s_array *  search_for_expression(const char *to_search) {
+    s_array my_array;
 
-    init_array(&my_array,1);
-
-
+    init_array(&my_array, 1);
 
     int counter = 0;
-    while (to_search[counter] != '\0')
-    {
+    while (to_search[counter] != '\0') {
         ++counter;
-        if(to_search[counter] == '%'){}
+        if (to_search[counter] == '%') { insert_in_array(&my_array, to_search[counter++]); }
     }
-
-
-
+    return &my_array;
 }
