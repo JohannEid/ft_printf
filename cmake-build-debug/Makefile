@@ -123,6 +123,33 @@ printf_project/fast:
 	$(MAKE) -f CMakeFiles/printf_project.dir/build.make CMakeFiles/printf_project.dir/build
 .PHONY : printf_project/fast
 
+dynamic_array.o: dynamic_array.c.o
+
+.PHONY : dynamic_array.o
+
+# target to build an object file
+dynamic_array.c.o:
+	$(MAKE) -f CMakeFiles/printf_project.dir/build.make CMakeFiles/printf_project.dir/dynamic_array.c.o
+.PHONY : dynamic_array.c.o
+
+dynamic_array.i: dynamic_array.c.i
+
+.PHONY : dynamic_array.i
+
+# target to preprocess a source file
+dynamic_array.c.i:
+	$(MAKE) -f CMakeFiles/printf_project.dir/build.make CMakeFiles/printf_project.dir/dynamic_array.c.i
+.PHONY : dynamic_array.c.i
+
+dynamic_array.s: dynamic_array.c.s
+
+.PHONY : dynamic_array.s
+
+# target to generate assembly for a file
+dynamic_array.c.s:
+	$(MAKE) -f CMakeFiles/printf_project.dir/build.make CMakeFiles/printf_project.dir/dynamic_array.c.s
+.PHONY : dynamic_array.c.s
+
 main.o: main.c.o
 
 .PHONY : main.o
@@ -177,33 +204,6 @@ misc.c.s:
 	$(MAKE) -f CMakeFiles/printf_project.dir/build.make CMakeFiles/printf_project.dir/misc.c.s
 .PHONY : misc.c.s
 
-my_struct.o: my_struct.c.o
-
-.PHONY : my_struct.o
-
-# target to build an object file
-my_struct.c.o:
-	$(MAKE) -f CMakeFiles/printf_project.dir/build.make CMakeFiles/printf_project.dir/my_struct.c.o
-.PHONY : my_struct.c.o
-
-my_struct.i: my_struct.c.i
-
-.PHONY : my_struct.i
-
-# target to preprocess a source file
-my_struct.c.i:
-	$(MAKE) -f CMakeFiles/printf_project.dir/build.make CMakeFiles/printf_project.dir/my_struct.c.i
-.PHONY : my_struct.c.i
-
-my_struct.s: my_struct.c.s
-
-.PHONY : my_struct.s
-
-# target to generate assembly for a file
-my_struct.c.s:
-	$(MAKE) -f CMakeFiles/printf_project.dir/build.make CMakeFiles/printf_project.dir/my_struct.c.s
-.PHONY : my_struct.c.s
-
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -213,15 +213,15 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... printf_project"
+	@echo "... dynamic_array.o"
+	@echo "... dynamic_array.i"
+	@echo "... dynamic_array.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
 	@echo "... misc.o"
 	@echo "... misc.i"
 	@echo "... misc.s"
-	@echo "... my_struct.o"
-	@echo "... my_struct.i"
-	@echo "... my_struct.s"
 .PHONY : help
 
 

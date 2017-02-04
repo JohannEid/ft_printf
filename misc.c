@@ -5,7 +5,6 @@
 #include <zconf.h>
 #include "misc.h"
 
-
 void ft_printf(const char *to_print, ...) {
 
     char error_msg[] = "There was an error in the output of the function";
@@ -32,6 +31,12 @@ const size_t size_of_string(const char *to_size) {
 
 
 void search_for_expression(const char *to_search) {
+    s_array  my_array;
+
+    init_array(&my_array,1);
+
+
+
     int counter = 0;
     while (to_search[counter] != '\0')
     {

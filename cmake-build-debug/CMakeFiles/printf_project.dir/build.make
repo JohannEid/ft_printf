@@ -105,42 +105,42 @@ CMakeFiles/printf_project.dir/misc.c.o.provides: CMakeFiles/printf_project.dir/m
 CMakeFiles/printf_project.dir/misc.c.o.provides.build: CMakeFiles/printf_project.dir/misc.c.o
 
 
-CMakeFiles/printf_project.dir/my_struct.c.o: CMakeFiles/printf_project.dir/flags.make
-CMakeFiles/printf_project.dir/my_struct.c.o: ../my_struct.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/johann/Work/printf_project/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object CMakeFiles/printf_project.dir/my_struct.c.o"
-	/usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/printf_project.dir/my_struct.c.o   -c /home/johann/Work/printf_project/my_struct.c
+CMakeFiles/printf_project.dir/dynamic_array.c.o: CMakeFiles/printf_project.dir/flags.make
+CMakeFiles/printf_project.dir/dynamic_array.c.o: ../dynamic_array.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/johann/Work/printf_project/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object CMakeFiles/printf_project.dir/dynamic_array.c.o"
+	/usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/printf_project.dir/dynamic_array.c.o   -c /home/johann/Work/printf_project/dynamic_array.c
 
-CMakeFiles/printf_project.dir/my_struct.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/printf_project.dir/my_struct.c.i"
-	/usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/johann/Work/printf_project/my_struct.c > CMakeFiles/printf_project.dir/my_struct.c.i
+CMakeFiles/printf_project.dir/dynamic_array.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/printf_project.dir/dynamic_array.c.i"
+	/usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/johann/Work/printf_project/dynamic_array.c > CMakeFiles/printf_project.dir/dynamic_array.c.i
 
-CMakeFiles/printf_project.dir/my_struct.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/printf_project.dir/my_struct.c.s"
-	/usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/johann/Work/printf_project/my_struct.c -o CMakeFiles/printf_project.dir/my_struct.c.s
+CMakeFiles/printf_project.dir/dynamic_array.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/printf_project.dir/dynamic_array.c.s"
+	/usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/johann/Work/printf_project/dynamic_array.c -o CMakeFiles/printf_project.dir/dynamic_array.c.s
 
-CMakeFiles/printf_project.dir/my_struct.c.o.requires:
+CMakeFiles/printf_project.dir/dynamic_array.c.o.requires:
 
-.PHONY : CMakeFiles/printf_project.dir/my_struct.c.o.requires
+.PHONY : CMakeFiles/printf_project.dir/dynamic_array.c.o.requires
 
-CMakeFiles/printf_project.dir/my_struct.c.o.provides: CMakeFiles/printf_project.dir/my_struct.c.o.requires
-	$(MAKE) -f CMakeFiles/printf_project.dir/build.make CMakeFiles/printf_project.dir/my_struct.c.o.provides.build
-.PHONY : CMakeFiles/printf_project.dir/my_struct.c.o.provides
+CMakeFiles/printf_project.dir/dynamic_array.c.o.provides: CMakeFiles/printf_project.dir/dynamic_array.c.o.requires
+	$(MAKE) -f CMakeFiles/printf_project.dir/build.make CMakeFiles/printf_project.dir/dynamic_array.c.o.provides.build
+.PHONY : CMakeFiles/printf_project.dir/dynamic_array.c.o.provides
 
-CMakeFiles/printf_project.dir/my_struct.c.o.provides.build: CMakeFiles/printf_project.dir/my_struct.c.o
+CMakeFiles/printf_project.dir/dynamic_array.c.o.provides.build: CMakeFiles/printf_project.dir/dynamic_array.c.o
 
 
 # Object files for target printf_project
 printf_project_OBJECTS = \
 "CMakeFiles/printf_project.dir/main.c.o" \
 "CMakeFiles/printf_project.dir/misc.c.o" \
-"CMakeFiles/printf_project.dir/my_struct.c.o"
+"CMakeFiles/printf_project.dir/dynamic_array.c.o"
 
 # External object files for target printf_project
 printf_project_EXTERNAL_OBJECTS =
 
 printf_project: CMakeFiles/printf_project.dir/main.c.o
 printf_project: CMakeFiles/printf_project.dir/misc.c.o
-printf_project: CMakeFiles/printf_project.dir/my_struct.c.o
+printf_project: CMakeFiles/printf_project.dir/dynamic_array.c.o
 printf_project: CMakeFiles/printf_project.dir/build.make
 printf_project: CMakeFiles/printf_project.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/johann/Work/printf_project/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking C executable printf_project"
@@ -153,7 +153,7 @@ CMakeFiles/printf_project.dir/build: printf_project
 
 CMakeFiles/printf_project.dir/requires: CMakeFiles/printf_project.dir/main.c.o.requires
 CMakeFiles/printf_project.dir/requires: CMakeFiles/printf_project.dir/misc.c.o.requires
-CMakeFiles/printf_project.dir/requires: CMakeFiles/printf_project.dir/my_struct.c.o.requires
+CMakeFiles/printf_project.dir/requires: CMakeFiles/printf_project.dir/dynamic_array.c.o.requires
 
 .PHONY : CMakeFiles/printf_project.dir/requires
 

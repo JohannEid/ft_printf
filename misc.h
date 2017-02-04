@@ -6,6 +6,7 @@
 #define PRINTF_PROJECT_MISC_H
 
 #include <unistd.h>
+#include "dynamic_array.h"
 
 
  void ft_printf (const char *, ...);

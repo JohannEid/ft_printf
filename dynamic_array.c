@@ -2,16 +2,7 @@
 // Created by johann on 04/02/17.
 //
 
-#include <glob.h>
-#include <malloc.h>
-#include "my_struct.h"
-
-struct t_array {
-    char *array;
-    size_t used;
-    size_t size;
-
-};
+#include "dynamic_array.h"
 
 void init_array(s_array *my_array, size_t initial_size) {
     my_array->array = (char *) malloc(initial_size * sizeof(char));
@@ -37,4 +28,3 @@ void free_array(s_array *my_array) {
     my_array->size = 0;
 
 }
-

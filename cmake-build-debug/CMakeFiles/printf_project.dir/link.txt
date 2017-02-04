@@ -1,1 +1,1 @@
-/usr/bin/cc  -g   CMakeFiles/printf_project.dir/main.c.o CMakeFiles/printf_project.dir/misc.c.o CMakeFiles/printf_project.dir/my_struct.c.o  -o printf_project 
+/usr/bin/cc  -g   CMakeFiles/printf_project.dir/main.c.o CMakeFiles/printf_project.dir/misc.c.o CMakeFiles/printf_project.dir/dynamic_array.c.o  -o printf_project 
