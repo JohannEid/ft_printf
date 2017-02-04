@@ -33,7 +33,11 @@ const size_t size_of_string(const char *to_size) {
 
 void search_for_expression(const char *to_search) {
     int counter = 0;
-    while
+    while (to_search[counter] != '\0')
+    {
+        ++counter;
+        if(to_search[counter] == '%'){}
+    }
 
 
 

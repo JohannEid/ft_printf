@@ -93,6 +93,12 @@
 		<Unit filename="/home/johann/Work/printf_project/misc.h">
 			<Option target="printf_project"/>
 		</Unit>
+		<Unit filename="/home/johann/Work/printf_project/my_struct.c">
+			<Option target="printf_project"/>
+		</Unit>
+		<Unit filename="/home/johann/Work/printf_project/my_struct.h">
+			<Option target="printf_project"/>
+		</Unit>
 		<Unit filename="/home/johann/Work/printf_project/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>

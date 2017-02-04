@@ -177,6 +177,33 @@ misc.c.s:
 	$(MAKE) -f CMakeFiles/printf_project.dir/build.make CMakeFiles/printf_project.dir/misc.c.s
 .PHONY : misc.c.s
 
+my_struct.o: my_struct.c.o
+
+.PHONY : my_struct.o
+
+# target to build an object file
+my_struct.c.o:
+	$(MAKE) -f CMakeFiles/printf_project.dir/build.make CMakeFiles/printf_project.dir/my_struct.c.o
+.PHONY : my_struct.c.o
+
+my_struct.i: my_struct.c.i
+
+.PHONY : my_struct.i
+
+# target to preprocess a source file
+my_struct.c.i:
+	$(MAKE) -f CMakeFiles/printf_project.dir/build.make CMakeFiles/printf_project.dir/my_struct.c.i
+.PHONY : my_struct.c.i
+
+my_struct.s: my_struct.c.s
+
+.PHONY : my_struct.s
+
+# target to generate assembly for a file
+my_struct.c.s:
+	$(MAKE) -f CMakeFiles/printf_project.dir/build.make CMakeFiles/printf_project.dir/my_struct.c.s
+.PHONY : my_struct.c.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -192,6 +219,9 @@ help:
 	@echo "... misc.o"
 	@echo "... misc.i"
 	@echo "... misc.s"
+	@echo "... my_struct.o"
+	@echo "... my_struct.i"
+	@echo "... my_struct.s"
 .PHONY : help
 
 
