@@ -150,6 +150,33 @@ main.c.s:
 	$(MAKE) -f CMakeFiles/printf_project.dir/build.make CMakeFiles/printf_project.dir/main.c.s
 .PHONY : main.c.s
 
+misc.o: misc.c.o
+
+.PHONY : misc.o
+
+# target to build an object file
+misc.c.o:
+	$(MAKE) -f CMakeFiles/printf_project.dir/build.make CMakeFiles/printf_project.dir/misc.c.o
+.PHONY : misc.c.o
+
+misc.i: misc.c.i
+
+.PHONY : misc.i
+
+# target to preprocess a source file
+misc.c.i:
+	$(MAKE) -f CMakeFiles/printf_project.dir/build.make CMakeFiles/printf_project.dir/misc.c.i
+.PHONY : misc.c.i
+
+misc.s: misc.c.s
+
+.PHONY : misc.s
+
+# target to generate assembly for a file
+misc.c.s:
+	$(MAKE) -f CMakeFiles/printf_project.dir/build.make CMakeFiles/printf_project.dir/misc.c.s
+.PHONY : misc.c.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -162,6 +189,9 @@ help:
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
+	@echo "... misc.o"
+	@echo "... misc.i"
+	@echo "... misc.s"
 .PHONY : help
 
 

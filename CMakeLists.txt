@@ -3,5 +3,5 @@ project(printf_project)
 
 set(CMAKE_C_STANDARD 99)
 
-set(SOURCE_FILES main.c)
+set(SOURCE_FILES main.c misc.c misc.h)
 add_executable(printf_project ${SOURCE_FILES})

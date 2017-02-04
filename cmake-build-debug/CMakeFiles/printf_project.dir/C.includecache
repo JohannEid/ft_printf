@@ -1,0 +1,22 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/johann/Work/printf_project/main.c
+stdio.h
+-
+misc.h
+/home/johann/Work/printf_project/misc.h
+
+/home/johann/Work/printf_project/misc.c
+misc.h
+/home/johann/Work/printf_project/misc.h
+
+/home/johann/Work/printf_project/misc.h
+unistd.h
+-
+
