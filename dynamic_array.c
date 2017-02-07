@@ -18,7 +18,10 @@ void insert_in_array(s_array *my_array, char element) {
         my_array->array = (char *) (realloc(my_array->array, my_array->size * sizeof(char)));
 
     }
-    my_array->array[++my_array->used] = element;
+    if (my_array->used == 0) {
+        my_array->array[0] = element;
+        ++my_array->used;
+    } else if (my_array->used >= 0) { my_array->array[++my_array->used] = element; }
 }
 
 void free_array(s_array *my_array) {

@@ -17,9 +17,9 @@ typedef struct t_array {
 }s_array;
 
 
-void init_array( s_array *, size_t );
-void insert_in_array (s_array * , char );
-void free_array (s_array * );
+void init_array( s_array * array_to_init , size_t initial_size);
+void insert_in_array (s_array * array_to_insert , char to_insert );
+void free_array (s_array * array_to_free );
 
 
 

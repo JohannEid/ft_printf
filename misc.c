@@ -5,27 +5,54 @@
 #include <zconf.h>
 #include "misc.h"
 
-void ft_printf(const char *to_print, ...) {
-    s_node *head = (s_node*)(malloc(sizeof(s_node)));
-    head = create_list(to_print);
+void ft_printf(char *to_print, ...) {
+    //varialbe argument initialisation
+    //va_list argument_list;
+    //va_start(to_print,argument_list);
+    //loop variable
+    int i = 0;
+    //initialise our dynamic array to story char into it
+    s_array char_array;
+    init_array(&char_array, 1);
+    //char conversion
+    char to_convert = ' ';
 
 
+    while (to_print[i] != '\0') {
+        if (to_print[i] != '%') {
 
+            insert_in_array(&char_array, to_print[i]);
+            if (write(1, char_array.array, char_array.used) != char_array.used)
+                _exit(0);
+            //1 bit = 1 char so ok to write
 
-    /*
-    char error_msg[] = "There was an error in the output of the function";
-    size_t size_of_print = size_of_string(to_print);
-    size_t size_of_error = size_of_string(error_msg);
-    va_list list_of_variables;
-    va_start(list_of_variables, to_print);
+        } else if (to_print[i] == '%') {
+            to_convert = to_print[++i];
+            //we initialise again our array
+            printf("yo");
 
+            free_array(&char_array);
+            init_array(&char_array, 1);
+        }
 
-    if (write(1, to_print, size_of_print) != size_of_print) {
-        write(2, error_msg, size_of_error);
+        ++i;
+
     }
-*/
+    free_array(&char_array);
 }
 
+
+
+
+
+
+
+
+
+
+
+
+/*
 const size_t size_of_string(const char *to_size) {
     size_t counter = 0;
     while (to_size[counter] != '\0') {
@@ -33,23 +60,5 @@ const size_t size_of_string(const char *to_size) {
     }
     return counter;
 }
+*/
 
-
-s_node *create_list(const char *to_search) {
-    s_node *head = (s_node *) (malloc(sizeof(s_node)));
-    head->next = NULL;
-    s_array my_array;
-    init_array(&my_array, 1);
-    int counter = 1;
-    while (to_search[counter] != '\0') {
-        if (to_search[counter] != ' ') {
-            insert_in_array(&my_array, to_search[counter]);
-        } else {
-            add_node(head, my_array);
-            free_array(&my_array);
-            init_array(&my_array, 1);
-        }
-
-    }
-    return head;
-}
