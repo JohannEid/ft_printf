@@ -17,7 +17,6 @@ void ft_printf(char *to_print, ...) {
     //char conversion
     char to_convert = ' ';
     //check if there is formating
-    int formating = 0;
 
 
     while (to_print[i] != '\0') {
@@ -28,7 +27,6 @@ void ft_printf(char *to_print, ...) {
             //1 bit = 1 char so ok to write
 
         } else if (to_print[i] == '%') {
-            ++formating;
             to_convert = to_print[++i];
             //we initialise again our array
             free_array(&char_array);
@@ -37,11 +35,14 @@ void ft_printf(char *to_print, ...) {
 
         ++i;
 
+        if(to_print[i]=='\0'){
+            if (write(1, char_array.array, char_array.used) != char_array.used)
+                _exit(0);}
+
     }
-    if (!formating) {
-        if (write(1, char_array.array, char_array.used) != char_array.used)
-            _exit(0);
-    }
+
+
+
     free_array(&char_array);
 }
 
