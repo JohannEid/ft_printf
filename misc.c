@@ -10,6 +10,8 @@ void ft_printf(const char *to_print, ...) {
     head = create_list(to_print);
 
 
+
+
     /*
     char error_msg[] = "There was an error in the output of the function";
     size_t size_of_print = size_of_string(to_print);

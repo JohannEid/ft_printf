@@ -33,4 +33,14 @@ unistd.h
 -
 dynamic_array.h
 /home/johann/Work/printf_project/dynamic_array.h
+node.h
+/home/johann/Work/printf_project/node.h
+
+/home/johann/Work/printf_project/node.c
+node.h
+/home/johann/Work/printf_project/node.h
+
+/home/johann/Work/printf_project/node.h
+dynamic_array.h
+/home/johann/Work/printf_project/dynamic_array.h
 

@@ -7,8 +7,14 @@ CMakeFiles/printf_project.dir/dynamic_array.c.o: ../dynamic_array.h
 CMakeFiles/printf_project.dir/main.c.o: ../dynamic_array.h
 CMakeFiles/printf_project.dir/main.c.o: ../main.c
 CMakeFiles/printf_project.dir/main.c.o: ../misc.h
+CMakeFiles/printf_project.dir/main.c.o: ../node.h
 
 CMakeFiles/printf_project.dir/misc.c.o: ../dynamic_array.h
 CMakeFiles/printf_project.dir/misc.c.o: ../misc.c
 CMakeFiles/printf_project.dir/misc.c.o: ../misc.h
+CMakeFiles/printf_project.dir/misc.c.o: ../node.h
+
+CMakeFiles/printf_project.dir/node.c.o: ../dynamic_array.h
+CMakeFiles/printf_project.dir/node.c.o: ../node.c
+CMakeFiles/printf_project.dir/node.c.o: ../node.h
 

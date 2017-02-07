@@ -204,6 +204,33 @@ misc.c.s:
 	$(MAKE) -f CMakeFiles/printf_project.dir/build.make CMakeFiles/printf_project.dir/misc.c.s
 .PHONY : misc.c.s
 
+node.o: node.c.o
+
+.PHONY : node.o
+
+# target to build an object file
+node.c.o:
+	$(MAKE) -f CMakeFiles/printf_project.dir/build.make CMakeFiles/printf_project.dir/node.c.o
+.PHONY : node.c.o
+
+node.i: node.c.i
+
+.PHONY : node.i
+
+# target to preprocess a source file
+node.c.i:
+	$(MAKE) -f CMakeFiles/printf_project.dir/build.make CMakeFiles/printf_project.dir/node.c.i
+.PHONY : node.c.i
+
+node.s: node.c.s
+
+.PHONY : node.s
+
+# target to generate assembly for a file
+node.c.s:
+	$(MAKE) -f CMakeFiles/printf_project.dir/build.make CMakeFiles/printf_project.dir/node.c.s
+.PHONY : node.c.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -222,6 +249,9 @@ help:
 	@echo "... misc.o"
 	@echo "... misc.i"
 	@echo "... misc.s"
+	@echo "... node.o"
+	@echo "... node.i"
+	@echo "... node.s"
 .PHONY : help
 
 

@@ -8,7 +8,13 @@ CMakeFiles/printf_project.dir/main.c.o
  /home/johann/Work/printf_project/dynamic_array.h
  /home/johann/Work/printf_project/main.c
  /home/johann/Work/printf_project/misc.h
+ /home/johann/Work/printf_project/node.h
 CMakeFiles/printf_project.dir/misc.c.o
  /home/johann/Work/printf_project/dynamic_array.h
  /home/johann/Work/printf_project/misc.c
  /home/johann/Work/printf_project/misc.h
+ /home/johann/Work/printf_project/node.h
+CMakeFiles/printf_project.dir/node.c.o
+ /home/johann/Work/printf_project/dynamic_array.h
+ /home/johann/Work/printf_project/node.c
+ /home/johann/Work/printf_project/node.h
