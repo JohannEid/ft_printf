@@ -10,6 +10,7 @@
 
 
 void ft_printf( char * to_print, ...);
+void format_output(char variable_type, va_list argument_list);
 
 
 
