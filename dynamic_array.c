@@ -21,7 +21,10 @@ void insert_in_array(s_array *my_array, char element) {
     if (my_array->used == 0) {
         my_array->array[0] = element;
         ++my_array->used;
-    } else if (my_array->used >= 0) { my_array->array[++my_array->used] = element; }
+    } else if (my_array->used > 0) {
+        my_array->array[my_array->used] = element;
+        ++my_array->used;
+    }
 }
 
 void free_array(s_array *my_array) {

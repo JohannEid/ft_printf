@@ -16,21 +16,21 @@ void ft_printf(char *to_print, ...) {
     init_array(&char_array, 1);
     //char conversion
     char to_convert = ' ';
+    //check if there is formating
+    int formating = 0;
 
 
     while (to_print[i] != '\0') {
         if (to_print[i] != '%') {
 
             insert_in_array(&char_array, to_print[i]);
-            if (write(1, char_array.array, char_array.used) != char_array.used)
-                _exit(0);
+
             //1 bit = 1 char so ok to write
 
         } else if (to_print[i] == '%') {
+            ++formating;
             to_convert = to_print[++i];
             //we initialise again our array
-            printf("yo");
-
             free_array(&char_array);
             init_array(&char_array, 1);
         }
@@ -38,8 +38,14 @@ void ft_printf(char *to_print, ...) {
         ++i;
 
     }
+    if (!formating) {
+        if (write(1, char_array.array, char_array.used) != char_array.used)
+            _exit(0);
+    }
     free_array(&char_array);
 }
+
+
 
 
 
