@@ -2,9 +2,9 @@
 #include "misc.h"
 
 int main() {
-    float number  = 0.98;
-    ft_printf("%%%%%%");
-    ft_printf("I am %d the king");
+    int number  = 1000 ;
+
+  ft_printf("I am the king %d ",number);
 
     return 0;
 }

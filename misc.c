@@ -45,9 +45,8 @@ void ft_printf(char *to_print, ...) {
 void format_output(char variable_type, va_list argument_list) {
     switch (variable_type) {
         case 'd':
-            /*if (write(1, va_arg(argument_list), char_array.used) != char_array.used)
+            if (write(1, convert_to_string(va_arg(argument_list, int)).array, sizeof(int)) != sizeof(int))
                 _exit(0);
-                */
             break;
     }
 }
@@ -76,7 +75,7 @@ void string_reverse(s_array *to_reverse) {
         return;
     char copy;
 
-    int i = to_reverse->array[0] == '-'? 1 : 0;
+    int i = to_reverse->array[0] == '-' ? 1 : 0;
     int j = to_reverse->used - 1;
 
     while (i <= j) {
@@ -86,7 +85,6 @@ void string_reverse(s_array *to_reverse) {
         ++i;
         --j;
     }
-
 }
 
 
