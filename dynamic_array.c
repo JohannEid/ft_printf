@@ -34,3 +34,7 @@ void free_array(s_array *my_array) {
     my_array->size = 0;
 
 }
+void reinitialise_array(s_array * to_reint) {
+    free_array(to_reint);
+    init_array(to_reint,1);
+}
