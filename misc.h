@@ -9,13 +9,16 @@
 #include "dynamic_array.h"
 #include <zconf.h>
 #include <limits.h>
+#define FALSE 0
+#define TRUE !(FALSE)
+
 
 
 void ft_printf( char * to_print, ...);
 void format_output(char variable_type, va_list argument_list);
 void convert_a_string(s_array * array, const char * string_to_conv);
 void convert_to_character(s_array * array,int ascii_code);
-void convert_to_string (s_array * array, int num_to_convert);
+void convert_to_string (s_array * array, int num_to_convert,int is_signed);
 void string_reverse (s_array *to_reverse);
 void screen_output (char * to_output, size_t bits);
 

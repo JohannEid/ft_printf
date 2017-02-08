@@ -43,9 +43,11 @@ void format_output(char variable_type, va_list argument_list) {
     s_array array;
     init_array(&array, 1);
     switch (variable_type) {
+        case 'u':
+            convert_to_string(&array, va_arg(argument_list, int), FALSE);
         case 'd':
         case 'i':
-            convert_to_string(&array, va_arg(argument_list, int));
+            convert_to_string(&array, va_arg(argument_list, int), TRUE);
             break;
         case 'c':
             //not forced to use array but code is cleaner ... :)
@@ -62,11 +64,16 @@ void format_output(char variable_type, va_list argument_list) {
 
 //int find_num_of_digits()
 
-void convert_to_string(s_array *array, int num_to_convert) {
+void convert_to_string(s_array *array, int num_to_convert, int is_signed) {
     char digit;
+    const char msg_error[] = "Ungisned format expected but received signed \n";
+
     if (num_to_convert == 0) {
         insert_in_array(array, '0');
     } else if (num_to_convert < 0) {
+        if (!is_signed) {
+            write(2, msg_error, sizeof(msg_error));
+            return;}
         insert_in_array(array, '-');
         num_to_convert *= -1;
     }
@@ -100,13 +107,12 @@ void convert_a_string(s_array *array, const char *string_to_conv) {
     while (string_to_conv[i] != '\0') {
         insert_in_array(array, string_to_conv[i]);
         ++i;
-
     }
 }
 
 
 void convert_to_character(s_array *array, int num_to_convert) {
-    const char *msg_error = "Error detected";
+    const char msg_error [] = "Error detected";
     char c;
     if ((num_to_convert < 128) && (num_to_convert >= 0)) { c = num_to_convert; }
     else { (write(2, msg_error, sizeof(msg_error)) != sizeof(msg_error)); }
@@ -115,7 +121,7 @@ void convert_to_character(s_array *array, int num_to_convert) {
 
 
 void screen_output(char *to_output, size_t bits) {
-    const char *msg_error = "Error detected";
+    const char msg_error [] = "Error detected";
     if (write(1, to_output, bits) != bits) {
         (write(2, msg_error, sizeof(msg_error)) != sizeof(msg_error));
     }
