@@ -47,16 +47,13 @@ void format_output(char variable_type, va_list argument_list) {
         case 'i':
             convert_to_string(&array, va_arg(argument_list, int));
             break;
-
         case 'c':
             //not forced to use array but code is cleaner ... :)
             convert_to_character(&array, va_arg(argument_list, int));
             break;
-            /*
         case 's':
-            screen_output (va_arg(argument_list, char*), sizeof(char*));
+            convert_a_string(&array, va_arg(argument_list, const char *));
             break;
-             */
 
     }
     screen_output(array.array, array.used);
@@ -98,12 +95,15 @@ void string_reverse(s_array *to_reverse) {
     }
 }
 
-void screen_output(char *to_output, size_t bits) {
-    const char *msg_error = "Error detected";
-    if (write(1, to_output, bits) != bits) {
-        (write(2, msg_error, sizeof(msg_error)) != sizeof(msg_error));
+void convert_a_string(s_array *array, const char *string_to_conv) {
+    int i = 0;
+    while (string_to_conv[i] != '\0') {
+        insert_in_array(array, string_to_conv[i]);
+        ++i;
+
     }
 }
+
 
 void convert_to_character(s_array *array, int num_to_convert) {
     const char *msg_error = "Error detected";
@@ -111,4 +111,12 @@ void convert_to_character(s_array *array, int num_to_convert) {
     if ((num_to_convert < 128) && (num_to_convert >= 0)) { c = num_to_convert; }
     else { (write(2, msg_error, sizeof(msg_error)) != sizeof(msg_error)); }
     insert_in_array(array, c);
+}
+
+
+void screen_output(char *to_output, size_t bits) {
+    const char *msg_error = "Error detected";
+    if (write(1, to_output, bits) != bits) {
+        (write(2, msg_error, sizeof(msg_error)) != sizeof(msg_error));
+    }
 }
