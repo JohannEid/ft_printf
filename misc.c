@@ -52,27 +52,42 @@ void format_output(char variable_type, va_list argument_list) {
     }
 }
 
-s_array convert_to_string (int num_to_convert){
-    s_array array ;
-    init_array(&array,1);
+s_array convert_to_string(int num_to_convert) {
+    s_array array;
+    init_array(&array, 1);
     char digit;
-    if (num_to_convert == 0)
-    {
-        insert_in_array(&array,'0');
+    if (num_to_convert == 0) {
+        insert_in_array(&array, '0');
+    } else if (num_to_convert < 0) {
+        insert_in_array(&array, '-');
+        num_to_convert *= -1;
     }
-    else if (num_to_convert < 0)
-    {
-        insert_in_array(&array , '-');
-    }
-    while (num_to_convert > 0)
-    {
-        digit =  num_to_convert % 10 +'0';
-        insert_in_array(&array,digit);
+    while (num_to_convert > 0) {
+        digit = num_to_convert % 10 + '0';
+        insert_in_array(&array, digit);
         num_to_convert /= 10;
     }
+    string_reverse(&array);
     return array;
 }
 
+void string_reverse(s_array *to_reverse) {
+    if (to_reverse->used == 0)
+        return;
+    char copy;
+
+    int i = to_reverse->array[0] == '-'? 1 : 0;
+    int j = to_reverse->used - 1;
+
+    while (i <= j) {
+        copy = to_reverse->array[i];
+        to_reverse->array[i] = to_reverse->array[j];
+        to_reverse->array[j] = copy;
+        ++i;
+        --j;
+    }
+
+}
 
 
 
