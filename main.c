@@ -7,7 +7,11 @@ int main() {
     int number3 = 2000;
     char letter = '0';
     char abc[] = "yo abc";
-    ft_printf(" %d ",number);
+
+    int a = 48;
+    char c = a;
+    ft_printf("%c",a);
+   // ft_printf(" %c ",letter);
 
  // ft_printf("I am the king %d i am %d %d  ",number,number2, number3);
 

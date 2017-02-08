@@ -41,30 +41,31 @@ void ft_printf(char *to_print, ...) {
 
 void format_output(char variable_type, va_list argument_list) {
     s_array array;
-    init_array(&array,1);
+    init_array(&array, 1);
     switch (variable_type) {
         case 'd':
         case 'i':
-            convert_to_string(&array,va_arg(argument_list, int));
+            convert_to_string(&array, va_arg(argument_list, int));
             break;
 
-            /*
         case 'c':
-            screen_output(va_arg(argument_list,char), sizeof(char));
+            //not forced to use array but code is cleaner ... :)
+            convert_to_character(&array, va_arg(argument_list, int));
             break;
+            /*
         case 's':
             screen_output (va_arg(argument_list, char*), sizeof(char*));
             break;
              */
 
     }
-    screen_output(array.array,array.used);
+    screen_output(array.array, array.used);
     free_array(&array);
 }
 
 //int find_num_of_digits()
 
-void convert_to_string(s_array* array, int num_to_convert) {
+void convert_to_string(s_array *array, int num_to_convert) {
     char digit;
     if (num_to_convert == 0) {
         insert_in_array(array, '0');
@@ -102,23 +103,12 @@ void screen_output(char *to_output, size_t bits) {
     if (write(1, to_output, bits) != bits) {
         (write(2, msg_error, sizeof(msg_error)) != sizeof(msg_error));
     }
-
-
 }
 
-
-
-
-
-
-
-/*
-const size_t size_of_string(const char *to_size) {
-    size_t counter = 0;
-    while (to_size[counter] != '\0') {
-        ++counter;
-    }
-    return counter;
+void convert_to_character(s_array *array, int num_to_convert) {
+    const char *msg_error = "Error detected";
+    char c;
+    if ((num_to_convert < 128) && (num_to_convert >= 0)) { c = num_to_convert; }
+    else { (write(2, msg_error, sizeof(msg_error)) != sizeof(msg_error)); }
+    insert_in_array(array, c);
 }
-*/
-
