@@ -2,7 +2,6 @@
 // Created by johann on 04/02/17.
 //
 
-#include <zconf.h>
 #include "misc.h"
 
 
@@ -22,8 +21,7 @@ void ft_printf(char *to_print, ...) {
             insert_in_array(&char_array, to_print[i]);
             //1 bit = 1 char so ok to write
         } else if (to_print[i] == '%') {
-            if (write(1, char_array.array, char_array.used) != char_array.used)
-                _exit(0);
+            screen_output(char_array.array, char_array.used);
             format_output(to_print[++i], argument_list);
             //we initialise again our array
             free_array(&char_array);
@@ -31,8 +29,7 @@ void ft_printf(char *to_print, ...) {
         }
         ++i;
         if (to_print[i] == '\0') {
-            if (write(1, char_array.array, char_array.used) != char_array.used)
-                _exit(0);
+            screen_output(char_array.array, char_array.used);
         }
     }
 
@@ -45,8 +42,8 @@ void ft_printf(char *to_print, ...) {
 void format_output(char variable_type, va_list argument_list) {
     switch (variable_type) {
         case 'd':
-            if (write(1, convert_to_string(va_arg(argument_list, int)).array, sizeof(int)) != sizeof(int))
-                _exit(0);
+        case 'i':
+            screen_output(convert_to_string(va_arg(argument_list, int)).array, sizeof(int));
             break;
     }
 }
@@ -85,6 +82,16 @@ void string_reverse(s_array *to_reverse) {
         ++i;
         --j;
     }
+}
+
+void screen_output(char *to_output, size_t bits) {
+    const char *msg_error = "Error detected";
+    if (write(1, to_output, t_bits) != t_bits) {
+        (write(2, msg_error, sizeof(msg_error)) != sizeof(msg_error));
+        exit(-1);
+    }
+    exit(0);
+
 }
 
 
