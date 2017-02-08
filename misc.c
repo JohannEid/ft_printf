@@ -40,31 +40,44 @@ void ft_printf(char *to_print, ...) {
 
 
 void format_output(char variable_type, va_list argument_list) {
+    s_array array;
+    init_array(&array,1);
     switch (variable_type) {
         case 'd':
         case 'i':
-            screen_output(convert_to_string(va_arg(argument_list, int)).array, sizeof(int));
+            convert_to_string(&array,va_arg(argument_list, int));
             break;
+
+            /*
+        case 'c':
+            screen_output(va_arg(argument_list,char), sizeof(char));
+            break;
+        case 's':
+            screen_output (va_arg(argument_list, char*), sizeof(char*));
+            break;
+             */
+
     }
+    screen_output(array.array,array.used);
+    free_array(&array);
 }
 
-s_array convert_to_string(int num_to_convert) {
-    s_array array;
-    init_array(&array, 1);
+//int find_num_of_digits()
+
+void convert_to_string(s_array* array, int num_to_convert) {
     char digit;
     if (num_to_convert == 0) {
-        insert_in_array(&array, '0');
+        insert_in_array(array, '0');
     } else if (num_to_convert < 0) {
-        insert_in_array(&array, '-');
+        insert_in_array(array, '-');
         num_to_convert *= -1;
     }
     while (num_to_convert > 0) {
         digit = num_to_convert % 10 + '0';
-        insert_in_array(&array, digit);
+        insert_in_array(array, digit);
         num_to_convert /= 10;
     }
-    string_reverse(&array);
-    return array;
+    string_reverse(array);
 }
 
 void string_reverse(s_array *to_reverse) {
@@ -72,7 +85,7 @@ void string_reverse(s_array *to_reverse) {
         return;
     char copy;
 
-    int i = to_reverse->array[0] == '-' ? 1 : 0;
+    int i = (to_reverse->array[0] == '-') ? 1 : 0;
     int j = to_reverse->used - 1;
 
     while (i <= j) {
@@ -86,11 +99,10 @@ void string_reverse(s_array *to_reverse) {
 
 void screen_output(char *to_output, size_t bits) {
     const char *msg_error = "Error detected";
-    if (write(1, to_output, t_bits) != t_bits) {
+    if (write(1, to_output, bits) != bits) {
         (write(2, msg_error, sizeof(msg_error)) != sizeof(msg_error));
-        exit(-1);
     }
-    exit(0);
+
 
 }
 

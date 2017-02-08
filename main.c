@@ -2,10 +2,12 @@
 #include "misc.h"
 
 int main() {
-    int number  = -1000 ;
+    int number  = 10000 ;
     int number2 = 2000;
-    float number3 = 2000;
-    printf("I am the king %u i am %i %d              ",number,number2, number3);
+    int number3 = 2000;
+    char letter = '0';
+    char abc[] = "yo abc";
+    ft_printf(" %d ",number);
 
  // ft_printf("I am the king %d i am %d %d  ",number,number2, number3);
 
