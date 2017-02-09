@@ -62,6 +62,7 @@ void ft_printf(char *to_print, ...) {
 
 void format_output(char variable_type, va_list argument_list,
                    s_array *digits_before_point, s_array *digits_after_point) {
+    const char * string_argument;
     s_array array;
     init_array(&array, 1);
     //for precision of string and float
@@ -81,17 +82,12 @@ void format_output(char variable_type, va_list argument_list,
             convert_to_character(&array, va_arg(argument_list, int));
             break;
         case 's':
-            //  printf("%d", digits_before_point->used);
-            //
-            // printf("%d",before_point);
+            string_argument =  va_arg(argument_list, const char *);
             add_spaces(&array, before_point - array.used);
-            printf("len before %d", array.used);
-            convert_a_string(&array, va_arg(argument_list, const char *));
-            printf("len AFTER %d", array.used);
-            // printf("len AFTERSPAce %d", array.used);
-            //  cut_string(&array,array.used - after_point);
-
+            convert_a_string(&array, string_argument);
+            cut_string(&array,len_of(string_argument) - after_point);
             break;
+
         case 'f':
 
             break;
@@ -145,15 +141,15 @@ void string_reverse(s_array *to_reverse) {
 void convert_a_string(s_array *array, const char *string_to_conv) {
     int difference = array->used - len_of(string_to_conv);
     //lengh of string bigger then spaces we have we start at start of array
-    array->array[0] = string_to_conv[0];
-    if (difference <= 0) {
+    if (difference < 0) {
         for (int i = 0; i < len_of(string_to_conv); ++i) {
-            if (i >= array->used) { insert_in_array(array, string_to_conv[i]); }
+            if (i >= array->used ) { insert_in_array(array, string_to_conv[i]); }
             else {
                 array->array[i] = string_to_conv[i];
             }
         }
-    } else if (difference > 0) {
+    } else if (difference >= 0) {
+
         for (int j = 0; j < len_of(string_to_conv); ++j) {
             array->array[difference] = string_to_conv[j];
             ++difference;
@@ -208,8 +204,7 @@ int power(int value, int power) {
 }
 
 void cut_string(s_array *array_to_cut, int number_to_cut) {
-    // printf("to cut %d", array_to_cut->used);
-    // printf("to cut %d", number_to_cut);
+
     if (number_to_cut <= 0) { return; }
     //no memory leak they will just not be printed but memory will free them nonetheless
     array_to_cut->used -= number_to_cut;
