@@ -30,14 +30,19 @@ void ft_printf(char *to_print, ...) {
             //1 bit = 1 char so ok to write
         } else if (to_print[i] == '%') {
             screen_output(char_array.array, char_array.used);
-            while (isdigit(to_print[i+1]) || (to_print[i + 1] == '.')) {
-                (point_reached) ? insert_in_array(&digits_before_point, to_print[i]) :
-                insert_in_array(&digits_after_point, to_print[i]);
-                if (to_print[i] == '.') { point_reached++; }
+            ++i;
+            while (isdigit(to_print[i]) || (to_print[i] == '.')) {
+                if (to_print[i] == '.') {
+                    point_reached++;
+                } else if (isdigit(to_print[i])) {
+                    (!point_reached) ? insert_in_array(&digits_before_point, to_print[i]) :
+                    insert_in_array(&digits_after_point, to_print[i]);
+                }
+
                 if (point_reached > 1) { break; }
                 ++i;
             }
-            format_output(to_print[++i], argument_list, &digits_before_point, &digits_after_point);
+            format_output(to_print[i], argument_list, &digits_before_point, &digits_after_point);
             //we initialise again our array
             reinitialise_array(&char_array);
             reinitialise_array(&digits_before_point);
@@ -48,12 +53,9 @@ void ft_printf(char *to_print, ...) {
             screen_output(char_array.array, char_array.used);
         }
     }
-
-
     free_array(&char_array);
     free_array(&digits_before_point);
     free_array(&digits_after_point);
-
     va_end(argument_list);
 }
 
@@ -66,7 +68,7 @@ void format_output(char variable_type, va_list argument_list,
     //for string before point will be min width for float num of integet before coma
     //after will max width for string and number of digit after coma for float
     int before_point = convert_string_to_int(digits_before_point);
-    int after_point = convert_string_to_int(digits_before_point);
+    int after_point = convert_string_to_int(digits_after_point);
     switch (variable_type) {
         case 'u':
             convert_to_string(&array, va_arg(argument_list, int), FALSE);
@@ -79,6 +81,10 @@ void format_output(char variable_type, va_list argument_list,
             convert_to_character(&array, va_arg(argument_list, int));
             break;
         case 's':
+          //  printf("%d", digits_before_point->used);
+          //  printf("%d", digits_after_point->used);
+            printf("%d",before_point);
+
             add_spaces(&array, before_point - array.used);
             convert_a_string(&array, va_arg(argument_list, const char *));
             break;
@@ -159,16 +165,17 @@ void screen_output(char *to_output, size_t bits) {
 
 
 int convert_string_to_int(s_array *array_to_convert) {
-    if (array_to_convert->used == 0) { return 0; }
     int value = 0;
+    if (array_to_convert->used == 0) { return 0; }
+
     for (int i = 0; i < array_to_convert->used; ++i) {
-        value += power(array_to_convert->array[i], array_to_convert->used - i);
+        value += (array_to_convert->array[i] - 48) * power(10, array_to_convert->used -1 - i);
     }
     return value;
 }
 
 void add_spaces(s_array *array_to_add_spaces, int number_of_spaces) {
-    if(number_of_spaces <=  0){ return;}
+    if (number_of_spaces <= 0) { return; }
     for (int i = 0; i < number_of_spaces; ++i) {
         insert_in_array(array_to_add_spaces, ' ');
     }
