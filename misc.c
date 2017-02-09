@@ -81,12 +81,16 @@ void format_output(char variable_type, va_list argument_list,
             convert_to_character(&array, va_arg(argument_list, int));
             break;
         case 's':
-          //  printf("%d", digits_before_point->used);
-          //  printf("%d", digits_after_point->used);
-            printf("%d",before_point);
-
+            //  printf("%d", digits_before_point->used);
+            //
+            // printf("%d",before_point);
             add_spaces(&array, before_point - array.used);
+            printf("len before %d", array.used);
             convert_a_string(&array, va_arg(argument_list, const char *));
+            printf("len AFTER %d", array.used);
+            // printf("len AFTERSPAce %d", array.used);
+            //  cut_string(&array,array.used - after_point);
+
             break;
         case 'f':
 
@@ -139,10 +143,21 @@ void string_reverse(s_array *to_reverse) {
 }
 
 void convert_a_string(s_array *array, const char *string_to_conv) {
-    int i = 0;
-    while (string_to_conv[i] != '\0') {
-        insert_in_array(array, string_to_conv[i]);
-        ++i;
+    int difference = array->used - len_of(string_to_conv);
+    //lengh of string bigger then spaces we have we start at start of array
+    array->array[0] = string_to_conv[0];
+    if (difference <= 0) {
+        for (int i = 0; i < len_of(string_to_conv); ++i) {
+            if (i >= array->used) { insert_in_array(array, string_to_conv[i]); }
+            else {
+                array->array[i] = string_to_conv[i];
+            }
+        }
+    } else if (difference > 0) {
+        for (int j = 0; j < len_of(string_to_conv); ++j) {
+            array->array[difference] = string_to_conv[j];
+            ++difference;
+        }
     }
 }
 
@@ -169,12 +184,13 @@ int convert_string_to_int(s_array *array_to_convert) {
     if (array_to_convert->used == 0) { return 0; }
 
     for (int i = 0; i < array_to_convert->used; ++i) {
-        value += (array_to_convert->array[i] - 48) * power(10, array_to_convert->used -1 - i);
+        value += (array_to_convert->array[i] - 48) * power(10, array_to_convert->used - 1 - i);
     }
     return value;
 }
 
 void add_spaces(s_array *array_to_add_spaces, int number_of_spaces) {
+
     if (number_of_spaces <= 0) { return; }
     for (int i = 0; i < number_of_spaces; ++i) {
         insert_in_array(array_to_add_spaces, ' ');
@@ -191,3 +207,19 @@ int power(int value, int power) {
     return value;
 }
 
+void cut_string(s_array *array_to_cut, int number_to_cut) {
+    // printf("to cut %d", array_to_cut->used);
+    // printf("to cut %d", number_to_cut);
+    if (number_to_cut <= 0) { return; }
+    //no memory leak they will just not be printed but memory will free them nonetheless
+    array_to_cut->used -= number_to_cut;
+
+}
+
+int len_of(const char *array) {
+    size_t i = 0;
+    while (array[i] != '\0') {
+        ++i;
+    }
+    return i;
+}

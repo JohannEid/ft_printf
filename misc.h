@@ -35,6 +35,12 @@ void screen_output(char *to_output, size_t bits);
 
 void add_spaces (s_array *array_to_add_spaces, int number_of_spaces);
 
+void cut_string (s_array* array_to_cut,int number_to_cut);
+
+int len_of (const char *array);
+
+
+
 
 
 #endif //PRINTF_PROJECT_MISC_H
