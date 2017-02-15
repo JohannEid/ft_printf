@@ -218,14 +218,19 @@ int len_of(const char *array) {
 }
 
 void convert_float_to_string(s_array *array, double to_convert, int precision) {
+    s_array array_decimal;
     int integer = (int) to_convert;
     double floating_num = to_convert - integer;
     int decimal;
+   init_array(&array_decimal, 1);
+
     decimal = (precision == 0) ? floating_num * power(10, 6) :
               floating_num * power(10, precision);
 
     convert_to_string(array, integer, TRUE);
     insert_in_array(array, '.');
-    convert_to_string(array, decimal, FALSE);
-    string_reverse(array);
+    convert_to_string(&array_decimal, decimal, FALSE);
+    concatenate(array, &array_decimal);
+    free_array(&array_decimal);
+
 }

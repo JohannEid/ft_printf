@@ -21,6 +21,7 @@ void init_array( s_array * array_to_init , size_t initial_size);
 void insert_in_array (s_array * array_to_insert , char to_insert );
 void free_array (s_array * array_to_free );
 void reinitialise_array(s_array * to_reint);
+void concatenate (s_array *left , s_array *right);
 
 
 
