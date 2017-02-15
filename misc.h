@@ -39,6 +39,8 @@ void cut_string (s_array* array_to_cut,int number_to_cut);
 
 int len_of (const char *array);
 
+void convert_float_to_string(s_array* array,  double to_convert, int precision);
+
 
 
 

@@ -44,6 +44,7 @@ void ft_printf(char *to_print, ...) {
             }
             format_output(to_print[i], argument_list, &digits_before_point, &digits_after_point);
             //we initialise again our array
+            point_reached = 0;
             reinitialise_array(&char_array);
             reinitialise_array(&digits_before_point);
             reinitialise_array(&digits_after_point);
@@ -62,7 +63,7 @@ void ft_printf(char *to_print, ...) {
 
 void format_output(char variable_type, va_list argument_list,
                    s_array *digits_before_point, s_array *digits_after_point) {
-    const char * string_argument;
+    const char *string_argument;
     s_array array;
     init_array(&array, 1);
     //for precision of string and float
@@ -82,14 +83,13 @@ void format_output(char variable_type, va_list argument_list,
             convert_to_character(&array, va_arg(argument_list, int));
             break;
         case 's':
-            string_argument =  va_arg(argument_list, const char *);
+            string_argument = va_arg(argument_list, const char *);
             add_spaces(&array, before_point - array.used);
             convert_a_string(&array, string_argument);
-            cut_string(&array,len_of(string_argument) - after_point);
+            cut_string(&array, len_of(string_argument) - after_point);
             break;
-
         case 'f':
-
+            convert_float_to_string(&array, va_arg(argument_list, double), after_point);
             break;
 
     }
@@ -106,11 +106,9 @@ void convert_to_string(s_array *array, int num_to_convert, int is_signed) {
     if (num_to_convert == 0) {
         insert_in_array(array, '0');
     } else if (num_to_convert < 0) {
-        if (!is_signed) {
-            write(2, msg_error, sizeof(msg_error));
-            return;
+        if (is_signed) {
+            insert_in_array(array, '-');
         }
-        insert_in_array(array, '-');
         num_to_convert *= -1;
     }
     while (num_to_convert > 0) {
@@ -143,7 +141,7 @@ void convert_a_string(s_array *array, const char *string_to_conv) {
     //lengh of string bigger then spaces we have we start at start of array
     if (difference < 0) {
         for (int i = 0; i < len_of(string_to_conv); ++i) {
-            if (i >= array->used ) { insert_in_array(array, string_to_conv[i]); }
+            if (i >= array->used) { insert_in_array(array, string_to_conv[i]); }
             else {
                 array->array[i] = string_to_conv[i];
             }
@@ -217,4 +215,17 @@ int len_of(const char *array) {
         ++i;
     }
     return i;
+}
+
+void convert_float_to_string(s_array *array, double to_convert, int precision) {
+    int integer = (int) to_convert;
+    double floating_num = to_convert - integer;
+    int decimal;
+    decimal = (precision == 0) ? floating_num * power(10, 6) :
+              floating_num * power(10, precision);
+
+    convert_to_string(array, integer, TRUE);
+    insert_in_array(array, '.');
+    convert_to_string(array, decimal, FALSE);
+    string_reverse(array);
 }
