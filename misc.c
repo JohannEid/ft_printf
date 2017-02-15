@@ -89,7 +89,7 @@ void format_output(char variable_type, va_list argument_list,
             cut_string(&array, len_of(string_argument) - after_point);
             break;
         case 'f':
-            convert_float_to_string(&array, va_arg(argument_list, double), after_point);
+            convert_float_to_string(&array, va_arg(argument_list, double), after_point,before_point);
             break;
 
     }
@@ -101,6 +101,7 @@ void format_output(char variable_type, va_list argument_list,
 
 void convert_to_string(s_array *array, int num_to_convert, int is_signed) {
     char digit;
+    int compteur = 0;
     const char msg_error[] = "Ungisned format expected but received signed \n";
 
     if (num_to_convert == 0) {
@@ -113,8 +114,9 @@ void convert_to_string(s_array *array, int num_to_convert, int is_signed) {
     }
     while (num_to_convert > 0) {
         digit = num_to_convert % 10 + '0';
-        insert_in_array(array, digit);
+        array->array[compteur] == ' ' ? array->array[compteur] = digit : insert_in_array(array, digit);
         num_to_convert /= 10;
+        ++compteur;
     }
     string_reverse(array);
 }
@@ -217,20 +219,20 @@ int len_of(const char *array) {
     return i;
 }
 
-void convert_float_to_string(s_array *array, double to_convert, int precision) {
+void convert_float_to_string(s_array *array, double to_convert, int precision, int width_precision) {
     s_array array_decimal;
     int integer = (int) to_convert;
     double floating_num = to_convert - integer;
     int decimal;
-   init_array(&array_decimal, 1);
+    init_array(&array_decimal, 1);
 
     decimal = (precision == 0) ? floating_num * power(10, 6) :
               floating_num * power(10, precision);
 
+    add_spaces(array,width_precision);
     convert_to_string(array, integer, TRUE);
     insert_in_array(array, '.');
     convert_to_string(&array_decimal, decimal, FALSE);
     concatenate(array, &array_decimal);
     free_array(&array_decimal);
-
 }
