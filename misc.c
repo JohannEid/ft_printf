@@ -94,10 +94,14 @@ void format_output(char variable_type, va_list argument_list,
             convert_float_to_string(&array, va_arg(argument_list, double), after_point, before_point);
             break;
         case 'o':
-            convert_to_octal(&array, va_arg(argument_list, unsigned
-                    int));
+            convert_to_octal_or_dec(&array, va_arg(argument_list, unsigned
+                    int), TRUE);
             break;
-
+        case 'x':
+        case 'X':
+            convert_to_octal_or_dec(&array, va_arg(argument_list, unsigned
+                    int), FALSE);
+            break;
     }
     screen_output(array.array, array.used);
     free_array(&array);
@@ -246,16 +250,55 @@ void convert_float_to_string(s_array *array, double to_convert, int precision, i
     free_array(&array_decimal);
 }
 
-void convert_to_octal(s_array *array, unsigned int to_convert) {
-    char rest;
-    unsigned int quotient = to_convert;
 
-    do {
-        rest = quotient % 8 +'0';
-        quotient = (quotient - rest) / 8;
-        insert_in_array(array, rest);
-    } while (rest >= 8);
-    string_reverse(array);
+void convert_to_octal_or_dec(s_array *array, unsigned int to_convert, int is_octal) {
+    char rest = '0';
+     int quotient = to_convert;
+    unsigned int result = 0;
+    int compteur = 0;
+    int div = (is_octal) ? 8 : 16;
+
+    while (quotient >= div) {
+        rest = quotient % div;
+        quotient = (quotient - rest) / div;
+        (is_octal) ? result += rest * power(10, compteur) : insert_in_array(array, match_int_to_char(rest));
+        ++compteur;
+    }
+    if (is_octal) {
+        result += quotient * power(10, compteur);
+        convert_to_string(array, result, TRUE);
+    } else {
+        rest = quotient;
+        insert_in_array(array,match_int_to_char(rest));
+        string_reverse(array); }
+}
+
+char match_int_to_char(char to_match) {
+
+    switch (to_match) {
+        case 10:
+            to_match = 'A';
+            break;
+        case 11:
+            to_match = 'B';
+            break;
+        case 12:
+            to_match = 'C';
+            break;
+        case 13:
+            to_match = 'D';
+            break;
+        case 14:
+            to_match = 'E';
+            break;
+        case 15:
+            to_match = 'F';
+            break;
+        default:
+            to_match+= '0';
+            break;
+    }
+    return to_match;
 }
 
 /*

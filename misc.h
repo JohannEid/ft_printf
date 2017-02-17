@@ -41,7 +41,11 @@ int len_of (const char *array);
 
 void convert_float_to_string(s_array *array,  double to_convert, int precision,int width_precision);
 
-void convert_to_octal (s_array *array, unsigned int to_convert);
+void convert_to_octal_or_dec (s_array *array, unsigned int to_convert,int is_octal);
+
+char  match_int_to_char (char to_match);
+
+//void replace
 
 //void convert_uint_to_string (s_array* array , unsigned int  number_to_convert);
 
