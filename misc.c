@@ -73,7 +73,9 @@ void format_output(char variable_type, va_list argument_list,
     int after_point = convert_string_to_int(digits_after_point);
     switch (variable_type) {
         case 'u':
-            convert_to_string(&array, va_arg(argument_list, int), FALSE);
+            convert_to_string(&array, va_arg(argument_list, unsigned
+                    int), TRUE);
+            break;
         case 'd':
         case 'i':
             convert_to_string(&array, va_arg(argument_list, int), TRUE);
@@ -89,7 +91,11 @@ void format_output(char variable_type, va_list argument_list,
             cut_string(&array, len_of(string_argument) - after_point);
             break;
         case 'f':
-            convert_float_to_string(&array, va_arg(argument_list, double), after_point,before_point);
+            convert_float_to_string(&array, va_arg(argument_list, double), after_point, before_point);
+            break;
+        case 'o':
+            convert_to_octal(&array, va_arg(argument_list, unsigned
+                    int));
             break;
 
     }
@@ -97,21 +103,23 @@ void format_output(char variable_type, va_list argument_list,
     free_array(&array);
 }
 
-//int find_num_of_digits()
 
 void convert_to_string(s_array *array, int num_to_convert, int is_signed) {
     char digit;
     int compteur = 0;
-    const char msg_error[] = "Ungisned format expected but received signed \n";
+    unsigned int unumber_to_conv;
 
     if (num_to_convert == 0) {
         insert_in_array(array, '0');
+        return;
     } else if (num_to_convert < 0) {
         if (is_signed) {
             insert_in_array(array, '-');
         }
         num_to_convert *= -1;
     }
+    //convert_uint_to_string(array,unumber_to_conv);
+
     while (num_to_convert > 0) {
         digit = num_to_convert % 10 + '0';
         array->array[compteur] == ' ' ? array->array[compteur] = digit : insert_in_array(array, digit);
@@ -119,6 +127,7 @@ void convert_to_string(s_array *array, int num_to_convert, int is_signed) {
         ++compteur;
     }
     string_reverse(array);
+
 }
 
 void string_reverse(s_array *to_reverse) {
@@ -229,10 +238,40 @@ void convert_float_to_string(s_array *array, double to_convert, int precision, i
     decimal = (precision == 0) ? floating_num * power(10, 6) :
               floating_num * power(10, precision);
 
-    add_spaces(array,width_precision);
+    add_spaces(array, width_precision);
     convert_to_string(array, integer, TRUE);
     insert_in_array(array, '.');
     convert_to_string(&array_decimal, decimal, FALSE);
     concatenate(array, &array_decimal);
     free_array(&array_decimal);
 }
+
+void convert_to_octal(s_array *array, unsigned int to_convert) {
+    char rest;
+    unsigned int quotient = to_convert;
+
+    do {
+        rest = quotient % 8 +'0';
+        quotient = (quotient - rest) / 8;
+        insert_in_array(array, rest);
+    } while (rest >= 8);
+    string_reverse(array);
+}
+
+/*
+void convert_uint_to_string (s_array* array , unsigned int  num_to_convert) {
+int compteur = 0;
+    char digit;
+
+    while (num_to_convert > 0) {
+        digit = num_to_convert % 10 + '0';
+        array->array[compteur] == ' ' ? array->array[compteur] = digit : insert_in_array(array, digit);
+        insert_in_array(array, digit);
+        num_to_convert /= 10;
+        ++compteur;
+    }
+    string_reverse(array);
+
+}
+
+*/
