@@ -91,7 +91,10 @@ void format_output(char variable_type, va_list argument_list,
             cut_string(&array, len_of(string_argument) - after_point);
             break;
         case 'f':
+        case 'e':
+        case 'E':
             convert_float_to_string(&array, va_arg(argument_list, double), after_point, before_point);
+            if (variable_type != 'f') { add_power_of_ten_precision(&array); }
             break;
         case 'o':
             convert_to_octal_or_dec(&array, va_arg(argument_list, unsigned
@@ -253,7 +256,7 @@ void convert_float_to_string(s_array *array, double to_convert, int precision, i
 
 void convert_to_octal_or_dec(s_array *array, unsigned int to_convert, int is_octal) {
     char rest = '0';
-     int quotient = to_convert;
+    int quotient = to_convert;
     unsigned int result = 0;
     int compteur = 0;
     int div = (is_octal) ? 8 : 16;
@@ -269,8 +272,9 @@ void convert_to_octal_or_dec(s_array *array, unsigned int to_convert, int is_oct
         convert_to_string(array, result, TRUE);
     } else {
         rest = quotient;
-        insert_in_array(array,match_int_to_char(rest));
-        string_reverse(array); }
+        insert_in_array(array, match_int_to_char(rest));
+        string_reverse(array);
+    }
 }
 
 char match_int_to_char(char to_match) {
@@ -295,11 +299,38 @@ char match_int_to_char(char to_match) {
             to_match = 'F';
             break;
         default:
-            to_match+= '0';
+            to_match += '0';
             break;
     }
     return to_match;
 }
+
+void add_power_of_ten_precision(s_array *array) {
+    int compteur = 0 ;
+    int negative = FALSE;
+    char to_insert = ' ';
+    if (array->array[0] == 0) {
+        negative = TRUE;
+        while (array->array[compteur] == '0') {
+            ++compteur;
+        }
+    } else if (array->array[0] != 0) {
+
+        while (array->array[compteur] != '.') {
+            ++compteur;
+        }
+    }
+    to_insert = compteur + '0';
+    (negative) ? insert_in_array(array, '-') : insert_in_array(array,'+');
+    if(compteur > 9 ){
+        insert_in_array(array,to_insert);
+    }
+    else if ((compteur < 9 )&& (compteur >= 0)){
+        insert_in_array(array,'0');
+        insert_in_array(array,to_insert);
+    }
+}
+
 
 /*
 void convert_uint_to_string (s_array* array , unsigned int  num_to_convert) {

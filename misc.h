@@ -45,6 +45,8 @@ void convert_to_octal_or_dec (s_array *array, unsigned int to_convert,int is_oct
 
 char  match_int_to_char (char to_match);
 
+void add_power_of_ten_precision (s_array *array);
+
 //void replace
 
 //void convert_uint_to_string (s_array* array , unsigned int  number_to_convert);
