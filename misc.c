@@ -209,13 +209,19 @@ void add_spaces(s_array *array_to_add_spaces, int number_of_spaces) {
     }
 }
 
-int power(int value, int power) {
-    int initial_value = value;
-    if (power == 1) { return value; }
+double power(double value, int power) {
+    double initial_value = value;
+    int initial_power = power;
+    (power < 0 )? power *= -1 : power;
+
+    if (initial_power == 1) { return value; }
     else if (power == 0) { return 1; }
+
     for (int i = 1; i < power; ++i) {
         value *= initial_value;
     }
+
+    value = (initial_power < 0 ) ?  1/ value: value;
     return value;
 }
 
@@ -306,7 +312,8 @@ char match_int_to_char(char to_match) {
 }
 
 void add_power_of_ten_precision(s_array *array) {
-    int compteur = 0 ;
+    int compteur = 0;
+    int compteur_2 = 0;
     int negative = FALSE;
     char to_insert = ' ';
     if (array->array[0] == 0) {
@@ -319,17 +326,19 @@ void add_power_of_ten_precision(s_array *array) {
         while (array->array[compteur] != '.') {
             ++compteur;
         }
+        //  while(compteur_2 <= compteur){}
     }
     to_insert = compteur + '0';
-    (negative) ? insert_in_array(array, '-') : insert_in_array(array,'+');
-    if(compteur > 9 ){
-        insert_in_array(array,to_insert);
-    }
-    else if ((compteur < 9 )&& (compteur >= 0)){
-        insert_in_array(array,'0');
-        insert_in_array(array,to_insert);
+    (negative) ? insert_in_array(array, '-') : insert_in_array(array, '+');
+    if (compteur > 9) {
+        insert_in_array(array, to_insert);
+    } else if ((compteur < 9) && (compteur >= 0)) {
+        insert_in_array(array, '0');
+        insert_in_array(array, to_insert);
     }
 }
+
+
 
 
 /*

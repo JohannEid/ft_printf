@@ -27,7 +27,7 @@ void convert_to_string(s_array *array, int num_to_convert, int is_signed);
 
 int convert_string_to_int(s_array  *array_to_convert);
 
-int power (int value , int power);
+double  power (double value , int power);
 
 void string_reverse(s_array *to_reverse);
 
@@ -46,6 +46,7 @@ void convert_to_octal_or_dec (s_array *array, unsigned int to_convert,int is_oct
 char  match_int_to_char (char to_match);
 
 void add_power_of_ten_precision (s_array *array);
+
 
 //void replace
 
