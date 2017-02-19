@@ -45,7 +45,9 @@ void convert_to_octal_or_dec (s_array *array, unsigned int to_convert,int is_oct
 
 char  match_int_to_char (char to_match);
 
-void add_power_of_ten_precision (s_array *array);
+void add_power_of_ten_precision(s_array *array, int power_of_ten, char var );
+
+int get_scientific_notation (double *to_get_power);
 
 
 //void replace

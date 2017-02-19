@@ -71,6 +71,8 @@ void format_output(char variable_type, va_list argument_list,
     //after will max width for string and number of digit after coma for float
     int before_point = convert_string_to_int(digits_before_point);
     int after_point = convert_string_to_int(digits_after_point);
+    int power_of_ten = 0;
+    double scien_notation = 0;
     switch (variable_type) {
         case 'u':
             convert_to_string(&array, va_arg(argument_list, unsigned
@@ -90,11 +92,19 @@ void format_output(char variable_type, va_list argument_list,
             convert_a_string(&array, string_argument);
             cut_string(&array, len_of(string_argument) - after_point);
             break;
-        case 'f':
+
         case 'e':
         case 'E':
+            scien_notation = va_arg(argument_list, double);
+            power_of_ten =  get_scientific_notation(&scien_notation);
+
+            convert_float_to_string(&array, scien_notation, after_point, before_point);
+            add_power_of_ten_precision(&array,power_of_ten,variable_type);
+            break;
+
+        case 'f':
             convert_float_to_string(&array, va_arg(argument_list, double), after_point, before_point);
-            if (variable_type != 'f') { add_power_of_ten_precision(&array); }
+
             break;
         case 'o':
             convert_to_octal_or_dec(&array, va_arg(argument_list, unsigned
@@ -311,31 +321,36 @@ char match_int_to_char(char to_match) {
     return to_match;
 }
 
-void add_power_of_ten_precision(s_array *array) {
-    int compteur = 0;
-    int compteur_2 = 0;
-    int negative = FALSE;
-    char to_insert = ' ';
-    if (array->array[0] == 0) {
-        negative = TRUE;
-        while (array->array[compteur] == '0') {
-            ++compteur;
-        }
-    } else if (array->array[0] != 0) {
+void add_power_of_ten_precision(s_array *array, int power_of_ten, char var ) {
+    char to_insert;
 
-        while (array->array[compteur] != '.') {
+    insert_in_array(array,var);
+    if(power_of_ten < 0 ){insert_in_array(array,'-');
+    power_of_ten *= -1;
+    }
+    else if(power_of_ten >= 0){insert_in_array(array,'+');}
+    to_insert = power_of_ten + '0' ;
+
+if(power_of_ten <= 9 ){insert_in_array(array,'0');
+    insert_in_array(array, to_insert);}
+    else if (power_of_ten > 9 ) {insert_in_array(array,to_insert);}
+
+}
+
+int get_scientific_notation (double *to_get_power){
+    int compteur = 0;
+    double multiple_of_10 = 10;
+
+    multiple_of_10 = 10;
+    if ((*to_get_power >= 1  ) ||  (*to_get_power <= -1))
+    {
+        while(*to_get_power > multiple_of_10 ){
             ++compteur;
+            multiple_of_10 *=10;
         }
-        //  while(compteur_2 <= compteur){}
     }
-    to_insert = compteur + '0';
-    (negative) ? insert_in_array(array, '-') : insert_in_array(array, '+');
-    if (compteur > 9) {
-        insert_in_array(array, to_insert);
-    } else if ((compteur < 9) && (compteur >= 0)) {
-        insert_in_array(array, '0');
-        insert_in_array(array, to_insert);
-    }
+    *to_get_power *= power(10,-compteur);
+return compteur;
 }
 
 
