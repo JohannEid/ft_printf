@@ -33,13 +33,14 @@ void string_reverse(s_array *to_reverse);
 
 void screen_output(char *to_output, size_t bits);
 
-void add_spaces (s_array *array_to_add_spaces, int number_of_spaces);
+void add_char (s_array *array_to_add_spaces, int number_of_spaces,char to_add);
 
 void cut_string (s_array* array_to_cut,int number_to_cut);
 
 int len_of (const char *array);
 
-void convert_float_to_string(s_array *array,  double to_convert, int precision,int width_precision);
+void convert_float_to_string(s_array *array,
+                             double to_convert, int precision,int width_precision,int zero_add);
 
 void convert_to_octal_or_dec (s_array *array, unsigned int to_convert,int is_octal);
 
@@ -48,6 +49,8 @@ char  match_int_to_char (char to_match);
 void add_power_of_ten_precision(s_array *array, int power_of_ten, char var );
 
 int get_scientific_notation (double *to_get_power);
+//for decimal numbers
+int number_of_zeros (double *to_get_zeros);
 
 
 //void replace
