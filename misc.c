@@ -88,9 +88,7 @@ void format_output(char variable_type, va_list argument_list,
             break;
         case 's':
             string_argument = va_arg(argument_list, const char *);
-            add_char(&array, before_point - array.used, ' ');
-            convert_a_string(&array, string_argument);
-            cut_string(&array, len_of(string_argument) - after_point);
+            convert_a_string(&array, string_argument,before_point,after_point);
             break;
 
         case 'e':
@@ -100,7 +98,8 @@ void format_output(char variable_type, va_list argument_list,
             scien_notation = va_arg(argument_list, double);
             power_of_ten = (variable_type != 'f')?
                             get_scientific_notation(&scien_notation):number_of_zeros(&scien_notation);
-            convert_float_to_string(&array, scien_notation, after_point, before_point, power_of_ten);
+            convert_float_to_string(&array, scien_notation, after_point, before_point,
+            power_of_ten,variable_type);
             (variable_type != 'f')?  add_power_of_ten_precision(&array, power_of_ten, variable_type) : ' ';
             break;
         case 'o':
@@ -133,7 +132,6 @@ void convert_to_string(s_array *array, int num_to_convert, int is_signed) {
         num_to_convert *= -1;
     }
     //convert_uint_to_string(array,unumber_to_conv);
-
     //doesn 't see the zeros in decimal numbers SAD !
     while (num_to_convert > 0) {
         digit = num_to_convert % 10 + '0';
@@ -158,27 +156,29 @@ void string_reverse(s_array *to_reverse) {
         to_reverse->array[i] = to_reverse->array[j];
         to_reverse->array[j] = copy;
         ++i;
-        --j;
-    }
+        --j; }
 }
 
-void convert_a_string(s_array *array, const char *string_to_conv) {
+void convert_a_string(s_array *array, const char *string_to_conv,int before_point,int after_point) {
     int difference = array->used - len_of(string_to_conv);
     //lengh of string bigger then spaces we have we start at start of array
+    (before_point != 0)? add_char(array, before_point - array->used, ' '): ' ';
     if (difference < 0) {
         for (int i = 0; i < len_of(string_to_conv); ++i) {
-            if (i >= array->used) { insert_in_array(array, string_to_conv[i]); }
+            if (i >= array->used) { insert_in_array(array, string_to_conv[i]);
+           }
             else {
                 array->array[i] = string_to_conv[i];
             }
         }
-    } else if (difference >= 0) {
+    } else if (difference > 0) {
 
         for (int j = 0; j < len_of(string_to_conv); ++j) {
             array->array[difference] = string_to_conv[j];
-            ++difference;
-        }
+            ++difference; }
     }
+    (before_point != 0)? cut_string(array, len_of(string_to_conv) - after_point)  : ' ';
+
 }
 
 
@@ -210,7 +210,7 @@ int convert_string_to_int(s_array *array_to_convert) {
 }
 
 void add_char(s_array *array_to_add, int width, char to_add) {
-    if (width <= 0) { return; }
+    if (width < 0) { return; }
     for (int i = 0; i < width; ++i) {
         insert_in_array(array_to_add, to_add);
     }
@@ -234,11 +234,9 @@ double power(double value, int power) {
 
 void cut_string(s_array *array_to_cut, int number_to_cut) {
 
-    if (number_to_cut <= 0) { return; }
+    if (number_to_cut < 0) { return; }
     //no memory leak they will just not be printed but memory will free them nonetheless
-    array_to_cut->used -= number_to_cut;
-
-}
+    array_to_cut->used -= number_to_cut; }
 
 int len_of(const char *array) {
     size_t i = 0;
@@ -249,7 +247,7 @@ int len_of(const char *array) {
 }
 
 void convert_float_to_string(s_array *array, double to_convert, int precision, int width_precision,
-                             int zero_add) {
+                             int zero_add,char variabe_type) {
     s_array array_decimal;
     int integer = (int) to_convert;
     double floating_num = to_convert - integer;
@@ -264,12 +262,12 @@ void convert_float_to_string(s_array *array, double to_convert, int precision, i
 
     convert_to_string(array, integer, TRUE);
     insert_in_array(array, '.');
-    /*
-    if (zero_add < 0) {
+
+    if ((zero_add < 0) & (variabe_type == 'f')) {
         zero_add *= -1;
         add_char(array, zero_add - 1 , '0');
     }
-     */
+
 
     convert_to_string(&array_decimal, decimal, FALSE);
     concatenate(array, &array_decimal);

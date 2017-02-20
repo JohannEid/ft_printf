@@ -19,7 +19,7 @@ void ft_printf(char *to_print, ...);
 void format_output(char variable_type, va_list argument_list,
                    s_array *digits_before_point, s_array *digits_after_point);
 
-void convert_a_string(s_array *array, const char *string_to_conv);
+void convert_a_string(s_array *array, const char *string_to_conv,int before_point,int after_point);
 
 void convert_to_character(s_array *array, int ascii_code);
 
@@ -39,8 +39,8 @@ void cut_string (s_array* array_to_cut,int number_to_cut);
 
 int len_of (const char *array);
 
-void convert_float_to_string(s_array *array,
-                             double to_convert, int precision,int width_precision,int zero_add);
+void convert_float_to_string(s_array *array, double to_convert, int precision, int width_precision,
+                             int zero_add,char variabe_type);
 
 void convert_to_octal_or_dec (s_array *array, unsigned int to_convert,int is_octal);
 
