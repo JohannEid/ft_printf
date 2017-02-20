@@ -96,11 +96,7 @@ void format_output(char variable_type, va_list argument_list,
         case 'f':
 
             scien_notation = va_arg(argument_list, double);
-            power_of_ten = (variable_type != 'f')?
-                            get_scientific_notation(&scien_notation):number_of_zeros(&scien_notation);
-            convert_float_to_string(&array, scien_notation, after_point, before_point,
-            power_of_ten,variable_type);
-            (variable_type != 'f')?  add_power_of_ten_precision(&array, power_of_ten, variable_type) : ' ';
+            convert_float_to_string(&array, scien_notation, after_point, before_point, variable_type);
             break;
         case 'o':
             convert_to_octal_or_dec(&array, va_arg(argument_list, unsigned
@@ -247,12 +243,19 @@ int len_of(const char *array) {
 }
 
 void convert_float_to_string(s_array *array, double to_convert, int precision, int width_precision,
-                             int zero_add,char variabe_type) {
+                            char variable_type) {
     s_array array_decimal;
-    int integer = (int) to_convert;
-    double floating_num = to_convert - integer;
+    int integer;
+    double floating_num;
     int decimal;
+    int power_of_ten ;
     init_array(&array_decimal, 1);
+
+    power_of_ten = (variable_type != 'f')?
+                   get_scientific_notation(&to_convert):number_of_zeros(&to_convert);
+
+    integer = (int) to_convert;
+    floating_num = to_convert - integer;
 
     decimal = (precision == 0) ? floating_num * power(10, 6) :
               floating_num * power(10, precision);
@@ -263,14 +266,15 @@ void convert_float_to_string(s_array *array, double to_convert, int precision, i
     convert_to_string(array, integer, TRUE);
     insert_in_array(array, '.');
 
-    if ((zero_add < 0) & (variabe_type == 'f')) {
-        zero_add *= -1;
-        add_char(array, zero_add - 1 , '0');
+    if ((power_of_ten < 0) & (variable_type == 'f')) {
+
+        add_char(array, (power_of_ten * -1) , '0');
     }
-
-
     convert_to_string(&array_decimal, decimal, FALSE);
     concatenate(array, &array_decimal);
+
+    (variable_type != 'f')?  add_power_of_ten_precision(array, power_of_ten, variable_type) : ' ';
+
     free_array(&array_decimal);
 }
 
