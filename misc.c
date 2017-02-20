@@ -10,8 +10,10 @@ void ft_printf(char *to_print, ...) {
     va_list argument_list;
     //loop variable
     int i = 0;
+    char my_flags[5] = {'-', '+', ' ', '#', '0',};
     //initialise our dynamic array to story char into it
     s_array char_array;
+    s_array flag_array;
     //char conversion
     //check digits precicision
     s_array digits_before_point;
@@ -21,6 +23,7 @@ void ft_printf(char *to_print, ...) {
     init_array(&char_array, 1);
     init_array(&digits_before_point, 1);
     init_array(&digits_after_point, 1);
+    init_array(&flag_array, 1);
     va_start(argument_list, to_print);
 
 
@@ -28,9 +31,14 @@ void ft_printf(char *to_print, ...) {
         if (to_print[i] != '%') {
             insert_in_array(&char_array, to_print[i]);
             //1 bit = 1 char so ok to write
-        } else if (to_print[i] == '%') {
+        } else if ((to_print[i] == '%') && (to_print[i + 1] == '%')) { ++i; }
+        else if (to_print[i] == '%') {
             screen_output(char_array.array, char_array.used);
             ++i;
+            while(check_in(to_print[i],my_flags,5)){
+                insert_in_array(&flag_array,to_print[i]);
+                ++i;
+            }
             while (isdigit(to_print[i]) || (to_print[i] == '.')) {
                 if (to_print[i] == '.') {
                     point_reached++;
@@ -42,7 +50,8 @@ void ft_printf(char *to_print, ...) {
                 if (point_reached > 1) { break; }
                 ++i;
             }
-            format_output(to_print[i], argument_list, &digits_before_point, &digits_after_point);
+            format_output(to_print[i], argument_list, &digits_before_point, &digits_after_point,
+            &flag_array);
             //we initialise again our array
             point_reached = 0;
             reinitialise_array(&char_array);
@@ -62,7 +71,7 @@ void ft_printf(char *to_print, ...) {
 
 
 void format_output(char variable_type, va_list argument_list,
-                   s_array *digits_before_point, s_array *digits_after_point) {
+                   s_array *digits_before_point, s_array *digits_after_point,s_array *flags) {
     const char *string_argument;
     s_array array;
     init_array(&array, 1);
@@ -71,16 +80,14 @@ void format_output(char variable_type, va_list argument_list,
     //after will max width for string and number of digit after coma for float
     int before_point = convert_string_to_int(digits_before_point);
     int after_point = convert_string_to_int(digits_after_point);
-    int power_of_ten = 0;
     double scien_notation = 0;
     switch (variable_type) {
         case 'u':
-            convert_to_string(&array, va_arg(argument_list, unsigned
-                    int), TRUE);
+            unsigned_int_formating(&array,flags,va_arg(argument_list, unsigned int));
             break;
         case 'd':
         case 'i':
-            convert_to_string(&array, va_arg(argument_list, int), TRUE);
+            int_formating(&array,flags,va_arg(argument_list, int));
             break;
         case 'c':
             //not forced to use array but code is cleaner ... :)
@@ -88,15 +95,14 @@ void format_output(char variable_type, va_list argument_list,
             break;
         case 's':
             string_argument = va_arg(argument_list, const char *);
-            convert_a_string(&array, string_argument,before_point,after_point);
+            convert_a_string(&array, string_argument, before_point, after_point);
             break;
 
         case 'e':
         case 'E':
         case 'f':
-
-            scien_notation = va_arg(argument_list, double);
-            convert_float_to_string(&array, scien_notation, after_point, before_point, variable_type);
+            float_formating(&array,flags,va_arg(argument_list, double),variable_type,after_point,
+                            before_point);
             break;
         case 'o':
             convert_to_octal_or_dec(&array, va_arg(argument_list, unsigned
@@ -144,7 +150,7 @@ void string_reverse(s_array *to_reverse) {
         return;
     char copy;
 
-    int i = (to_reverse->array[0] == '-') ? 1 : 0;
+    int i = (isdigit (to_reverse->array[0])) ? 0 : 1 ;
     int j = to_reverse->used - 1;
 
     while (i <= j) {
@@ -152,18 +158,20 @@ void string_reverse(s_array *to_reverse) {
         to_reverse->array[i] = to_reverse->array[j];
         to_reverse->array[j] = copy;
         ++i;
-        --j; }
+        --j;
+    }
 }
 
-void convert_a_string(s_array *array, const char *string_to_conv,int before_point,int after_point) {
+void convert_a_string(s_array *array, const char *string_to_conv, int before_point, int after_point) {
     int difference = array->used - len_of(string_to_conv);
     //lengh of string bigger then spaces we have we start at start of array
-    (before_point != 0)? add_char(array, before_point - array->used, ' '): ' ';
+
+    (before_point != 0) ? add_char(array, before_point - array->used, ' ') : ' ';
     if (difference < 0) {
         for (int i = 0; i < len_of(string_to_conv); ++i) {
-            if (i >= array->used) { insert_in_array(array, string_to_conv[i]);
-           }
-            else {
+            if (i >= array->used) {
+                insert_in_array(array, string_to_conv[i]);
+            } else {
                 array->array[i] = string_to_conv[i];
             }
         }
@@ -171,9 +179,10 @@ void convert_a_string(s_array *array, const char *string_to_conv,int before_poin
 
         for (int j = 0; j < len_of(string_to_conv); ++j) {
             array->array[difference] = string_to_conv[j];
-            ++difference; }
+            ++difference;
+        }
     }
-    (before_point != 0)? cut_string(array, len_of(string_to_conv) - after_point)  : ' ';
+    (before_point != 0) ? cut_string(array, len_of(string_to_conv) - after_point) : ' ';
 
 }
 
@@ -232,7 +241,8 @@ void cut_string(s_array *array_to_cut, int number_to_cut) {
 
     if (number_to_cut < 0) { return; }
     //no memory leak they will just not be printed but memory will free them nonetheless
-    array_to_cut->used -= number_to_cut; }
+    array_to_cut->used -= number_to_cut;
+}
 
 int len_of(const char *array) {
     size_t i = 0;
@@ -243,16 +253,16 @@ int len_of(const char *array) {
 }
 
 void convert_float_to_string(s_array *array, double to_convert, int precision, int width_precision,
-                            char variable_type) {
+                             char variable_type) {
     s_array array_decimal;
     int integer;
     double floating_num;
     int decimal;
-    int power_of_ten ;
+    int power_of_ten;
     init_array(&array_decimal, 1);
 
-    power_of_ten = (variable_type != 'f')?
-                   get_scientific_notation(&to_convert):number_of_zeros(&to_convert);
+    power_of_ten = (variable_type != 'f') ?
+                   get_scientific_notation(&to_convert) : number_of_zeros(&to_convert);
 
     integer = (int) to_convert;
     floating_num = to_convert - integer;
@@ -265,15 +275,13 @@ void convert_float_to_string(s_array *array, double to_convert, int precision, i
 
     convert_to_string(array, integer, TRUE);
     insert_in_array(array, '.');
-
-    if ((power_of_ten < 0) & (variable_type == 'f')) {
-
-        add_char(array, (power_of_ten * -1) , '0');
+    if ((power_of_ten < 0) & (variable_type == 'f') && (integer == 0)) {
+       add_char(array, (power_of_ten * -1 - 1), '0');
     }
     convert_to_string(&array_decimal, decimal, FALSE);
     concatenate(array, &array_decimal);
-
-    (variable_type != 'f')?  add_power_of_ten_precision(array, power_of_ten, variable_type) : ' ';
+    (decimal == 0 ) ? add_char(array,5,'0') : ' ';
+    (variable_type != 'f') ? add_power_of_ten_precision(array, power_of_ten, variable_type) : ' ';
 
     free_array(&array_decimal);
 }
@@ -303,31 +311,10 @@ void convert_to_octal_or_dec(s_array *array, unsigned int to_convert, int is_oct
 }
 
 char match_int_to_char(char to_match) {
+    char tab_char[6] = {'A', 'B', 'C', 'D', 'E', 'F'};
+    if ((int) to_match < 10) { return to_match + '0'; }
 
-    switch (to_match) {
-        case 10:
-            to_match = 'A';
-            break;
-        case 11:
-            to_match = 'B';
-            break;
-        case 12:
-            to_match = 'C';
-            break;
-        case 13:
-            to_match = 'D';
-            break;
-        case 14:
-            to_match = 'E';
-            break;
-        case 15:
-            to_match = 'F';
-            break;
-        default:
-            to_match += '0';
-            break;
-    }
-    return to_match;
+    return tab_char[(int) to_match % 10];
 }
 
 void add_power_of_ten_precision(s_array *array, int power_of_ten, char var) {
@@ -366,6 +353,7 @@ int get_scientific_notation(double *to_get_power) {
 }
 
 int number_of_zeros(double *to_get_zeros) {
+
     double temp = (*to_get_zeros < 0) ? -(*to_get_zeros) : *to_get_zeros;
     double multiple_of_10 = 0.1;
     int compteur = 0;
@@ -377,6 +365,47 @@ int number_of_zeros(double *to_get_zeros) {
     }
     return -(compteur + 1);
 }
+
+int check_in(char to_check, const char *tab_check, int size_of_tab) {
+
+    for (int i = 0; i < size_of_tab; ++i) {
+        if (tab_check[i] == to_check) { return 1; }
+    }
+    return 0;
+}
+
+void unsigned_int_formating (s_array *text_array, s_array *flags, unsigned int uint){
+if(check_in('+',flags->array,flags->used)){
+    insert_in_array(text_array,'+');
+}
+    else if (check_in(' ',flags->array,flags->used))
+{
+    insert_in_array(text_array,'_');
+}
+    convert_to_string(text_array, uint , TRUE);
+
+}
+void int_formating (s_array *text_array, s_array *flags, int my_int) {
+
+    if(check_in('+',flags->array,flags->used)&& (my_int >= 0 )){
+        insert_in_array(text_array,'+');
+    }
+    else if (check_in(' ',flags->array,flags->used))
+    {
+        insert_in_array(text_array,'_');
+    }
+    convert_to_string(text_array, my_int, TRUE);
+}
+
+void float_formating(s_array *text_array, s_array *flags, double my_double, char var_arg,
+                     int after_point, int before_point){
+
+    convert_float_to_string(text_array, my_double, after_point, before_point, var_arg);
+
+}
+
+
+
 
 
 
