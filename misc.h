@@ -61,6 +61,8 @@ void int_formating (s_array *text_array, s_array *flags, int my_int);
 
 void float_formating(s_array *text_array, s_array *flags, double my_double, char var_arg, int after_point,
 int before_point);
+
+void flag_insertion(s_array *text_array, s_array *flags,double flag_conditions);
 //void replace
 
 //void convert_uint_to_string (s_array* array , unsigned int  number_to_convert);

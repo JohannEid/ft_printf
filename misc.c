@@ -5,6 +5,7 @@
 #include "misc.h"
 
 
+
 void ft_printf(char *to_print, ...) {
     //varialbe argument initialisation
     va_list argument_list;
@@ -375,34 +376,39 @@ int check_in(char to_check, const char *tab_check, int size_of_tab) {
 }
 
 void unsigned_int_formating (s_array *text_array, s_array *flags, unsigned int uint){
-if(check_in('+',flags->array,flags->used)){
-    insert_in_array(text_array,'+');
-}
-    else if (check_in(' ',flags->array,flags->used))
-{
-    insert_in_array(text_array,'_');
-}
+    const char msg_error[]= "Error unsigned int can't be signed ...\n ";
+
+    flag_insertion(text_array,flags,uint);
     convert_to_string(text_array, uint , TRUE);
+    if(text_array->array[0]  ==  '-'){
+        write(2, msg_error, sizeof(msg_error)) != sizeof(msg_error);}
 
 }
 void int_formating (s_array *text_array, s_array *flags, int my_int) {
 
-    if(check_in('+',flags->array,flags->used)&& (my_int >= 0 )){
-        insert_in_array(text_array,'+');
-    }
-    else if (check_in(' ',flags->array,flags->used))
-    {
-        insert_in_array(text_array,'_');
-    }
+    flag_insertion(text_array,flags,my_int);
     convert_to_string(text_array, my_int, TRUE);
 }
 
 void float_formating(s_array *text_array, s_array *flags, double my_double, char var_arg,
                      int after_point, int before_point){
 
+    flag_insertion(text_array,flags,my_double);
     convert_float_to_string(text_array, my_double, after_point, before_point, var_arg);
 
 }
+void flag_insertion(s_array *text_array, s_array *flags,double flag_conditions){
+    if(check_in('+',flags->array,flags->used)&& (flag_conditions >= 0 )){
+        insert_in_array(text_array,'+');
+    }
+    else if (check_in(' ',flags->array,flags->used))
+    {
+        insert_in_array(text_array,'_');
+    }
+
+
+}
+
 
 
 
