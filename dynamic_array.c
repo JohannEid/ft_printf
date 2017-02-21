@@ -46,5 +46,7 @@ void concatenate(s_array *left, s_array *right) {
     for (int i = 0; i < len_of(right->array); ++i) {
         insert_in_array(left, right->array[i]);
     }
+
 }
+
 
