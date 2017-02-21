@@ -148,7 +148,8 @@ void string_reverse(s_array *to_reverse) {
         return;
     char copy;
 
-    int i = (to_reverse->array[1] == 'X') ? 2 : (isdigit(to_reverse->array[0])) ? 0 : 1;
+    int i = (to_reverse->array[1] == 'X') ? 2 : (to_reverse->array[1] == 'x') ? 2 :
+                                                (isdigit(to_reverse->array[0])) ? 0 : 1;
     int j = to_reverse->used - 1;
 
     while (i <= j) {
@@ -409,13 +410,16 @@ void hexa_octa_formating(s_array *text_array, s_array *flags, unsigned int to_co
 
 
 void flag_insertion(s_array *text_array, s_array *flags, double flag_conditions, char type_format) {
-    s_array flags_insertions;
-    init_array(&flags_insertions, 1);
-    if (check_in('+', flags->array, flags->used) && (flag_conditions >= 0)) {
-        insert_in_array(text_array, '+');
-    } else if (check_in(' ', flags->array, flags->used)) {
-        insert_in_array(text_array, '_');
+
+    if((type_format!= 'X')&&(type_format!= 'x') &&(type_format!= 'o'))
+    {
+        if (check_in('+', flags->array, flags->used) && (flag_conditions >= 0)) {
+            insert_in_array(text_array, '+');
+        } else if (check_in(' ', flags->array, flags->used)) {
+            insert_in_array(text_array, '_');
+        }
     }
+
     if (check_in('#', flags->array, flags->used)) {
         if (type_format == 'o') {
             insert_in_array(text_array, '#');
@@ -425,7 +429,7 @@ void flag_insertion(s_array *text_array, s_array *flags, double flag_conditions,
         }
 
     }
-
+free_array(flags);
 
 }
 
