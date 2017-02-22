@@ -66,6 +66,10 @@ void hexa_octa_formating (s_array *text_array,s_array *flags, unsigned int to_co
 
 void flag_insertion(s_array *text_array, s_array *flags,double flag_conditions,char type_format);
 
+void suppress_trailing_zeros(s_array *text_array);
+
+int is_decimal(char *array_of_char);
+
 
 
 //void replace

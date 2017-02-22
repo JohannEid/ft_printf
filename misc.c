@@ -102,6 +102,8 @@ void format_output(char variable_type, va_list argument_list,
         case 'e':
         case 'E':
         case 'f':
+        case 'g':
+        case 'G':
             float_formating(&array, flags, va_arg(argument_list, double), variable_type, after_point,
                             before_point);
             break;
@@ -159,7 +161,7 @@ void string_reverse(s_array *to_reverse) {
         ++i;
         --j;
     }
-    (to_reverse->array[0] == '#')? to_reverse->array[0]= '0' : ' ';
+    (to_reverse->array[0] == '#') ? to_reverse->array[0] = '0' : ' ';
 }
 
 void convert_a_string(s_array *array, const char *string_to_conv, int before_point, int after_point) {
@@ -260,7 +262,6 @@ void convert_float_to_string(s_array *array, double to_convert, int precision, i
     int decimal;
     int power_of_ten;
     init_array(&array_decimal, 1);
-
     power_of_ten = (variable_type != 'f') ?
                    get_scientific_notation(&to_convert) : number_of_zeros(&to_convert);
 
@@ -393,9 +394,16 @@ void int_formating(s_array *text_array, s_array *flags, int my_int) {
 
 void float_formating(s_array *text_array, s_array *flags, double my_double, char var_arg,
                      int after_point, int before_point) {
-
+char temp ;
+    if(( var_arg == 'g')||(var_arg == 'G')){
+        temp = 'f';
+    }
+    else {temp = var_arg;}
     flag_insertion(text_array, flags, my_double, var_arg);
-    convert_float_to_string(text_array, my_double, after_point, before_point, var_arg);
+    convert_float_to_string(text_array, my_double, after_point, before_point, temp);
+   if(( var_arg == 'g')||(var_arg == 'G')){
+       suppress_trailing_zeros(text_array);
+   }
 
 }
 
@@ -411,8 +419,7 @@ void hexa_octa_formating(s_array *text_array, s_array *flags, unsigned int to_co
 
 void flag_insertion(s_array *text_array, s_array *flags, double flag_conditions, char type_format) {
 
-    if((type_format!= 'X')&&(type_format!= 'x') &&(type_format!= 'o'))
-    {
+    if ((type_format != 'X') && (type_format != 'x') && (type_format != 'o')) {
         if (check_in('+', flags->array, flags->used) && (flag_conditions >= 0)) {
             insert_in_array(text_array, '+');
         } else if (check_in(' ', flags->array, flags->used)) {
@@ -429,7 +436,32 @@ void flag_insertion(s_array *text_array, s_array *flags, double flag_conditions,
         }
 
     }
-free_array(flags);
+    free_array(flags);
+
+}
+
+void suppress_trailing_zeros(s_array *text_array) {
+    int trailing_zeros= 0;
+    int counter ;
+    if(!is_decimal(text_array->array)){ return;}
+    if(text_array->array[text_array->used -1 ]!='0'){ return;}
+    counter = text_array->used -1 ;
+    while ((text_array->array[counter] == '0') || (text_array->array[counter] == '.')){
+
+        ++trailing_zeros;
+        if(text_array->array[counter] == '.'){
+            break;
+        }
+        --counter;
+
+    }
+text_array->used-=trailing_zeros;
+}
+int is_decimal(char *array_of_char){
+    for(int i = 0 ; i < len_of(array_of_char); ++i){
+        if(array_of_char[i] == '.'){ return TRUE;}
+    }
+    return FALSE;
 
 }
 
