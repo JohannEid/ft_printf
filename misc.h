@@ -53,7 +53,7 @@ int get_scientific_notation(double *to_get_power);
 //for decimal numbers
 int number_of_zeros(double *to_get_zeros);
 
-int check_in (char to_check, const char* tab_check, int size_of_tab);
+int check_in (char to_check,   char tab_check[], int size_of_tab);
 
 void unsigned_int_formating (s_array *text_array, s_array *flags, unsigned int uint);
 
@@ -69,6 +69,8 @@ void flag_insertion(s_array *text_array, s_array *flags,double flag_conditions,c
 void suppress_trailing_zeros(s_array *text_array);
 
 int is_decimal(char *array_of_char);
+
+void fill_blank_space(s_array *text_array);
 
 
 

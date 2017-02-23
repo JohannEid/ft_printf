@@ -95,8 +95,7 @@ void format_output(char variable_type, va_list argument_list,
             convert_to_character(&array, va_arg(argument_list, int));
             break;
         case 's':
-            string_argument = va_arg(argument_list, const char *);
-            convert_a_string(&array, string_argument, before_point, after_point);
+            convert_a_string(&array, va_arg(argument_list, const char *), before_point, after_point);
             break;
 
         case 'e':
@@ -133,11 +132,10 @@ void convert_to_string(s_array *array, int num_to_convert, int is_signed) {
         }
         num_to_convert *= -1;
     }
-    //convert_uint_to_string(array,unumber_to_conv);
-    //doesn 't see the zeros in decimal numbers SAD !
+
     while (num_to_convert > 0) {
         digit = num_to_convert % 10 + '0';
-        array->array[compteur] == ' ' ? array->array[compteur] = digit : insert_in_array(array, digit);
+        (array->array[compteur] == ' ') ? array->array[compteur] = digit : insert_in_array(array, digit);
         num_to_convert /= 10;
         ++compteur;
     }
@@ -256,12 +254,16 @@ int len_of(const char *array) {
 
 void convert_float_to_string(s_array *array, double to_convert, int precision, int width_precision,
                              char variable_type) {
+    int spaces;
+    s_array array_integer;
     s_array array_decimal;
     int integer;
     double floating_num;
     int decimal;
+
     int power_of_ten;
     init_array(&array_decimal, 1);
+    init_array(&array_integer, 1);
     power_of_ten = (variable_type != 'f') ?
                    get_scientific_notation(&to_convert) : number_of_zeros(&to_convert);
 
@@ -270,21 +272,22 @@ void convert_float_to_string(s_array *array, double to_convert, int precision, i
 
     decimal = (precision == 0) ? floating_num * power(10, 6) :
               floating_num * power(10, precision);
-
-    add_char(array, width_precision, ' ');
-
-
-    convert_to_string(array, integer, TRUE);
+    precision = (precision == 0) ? 6 : precision;
+    convert_to_string(&array_integer, integer, TRUE);
+    add_char(array, width_precision - array_integer.used - precision - 1, ' ');
+    concatenate(array, &array_integer);
     insert_in_array(array, '.');
     if ((power_of_ten < 0) & (variable_type == 'f') && (integer == 0)) {
         add_char(array, (power_of_ten * -1 - 1), '0');
     }
     convert_to_string(&array_decimal, decimal, FALSE);
-    concatenate(array, &array_decimal);
-    (decimal == 0) ? add_char(array, 5, '0') : ' ';
+    (decimal != 0) ? concatenate(array, &array_decimal) : ' ';
+    (decimal == 0) ? add_char(array, precision, '0') : ' ';
     (variable_type != 'f') ? add_power_of_ten_precision(array, power_of_ten, variable_type) : ' ';
 
     free_array(&array_decimal);
+    free_array(&array_integer);
+
 }
 
 // maybe I should have made a function for each but process so similar seems like a waste ..
@@ -367,8 +370,8 @@ int number_of_zeros(double *to_get_zeros) {
     return -(compteur + 1);
 }
 
-int check_in(char to_check, const char *tab_check, int size_of_tab) {
-
+int check_in(char to_check, char tab_check[], int size_of_tab) {
+    if (size_of_tab == 0) { return 0; }
     for (int i = 0; i < size_of_tab; ++i) {
         if (tab_check[i] == to_check) { return 1; }
     }
@@ -394,16 +397,22 @@ void int_formating(s_array *text_array, s_array *flags, int my_int) {
 
 void float_formating(s_array *text_array, s_array *flags, double my_double, char var_arg,
                      int after_point, int before_point) {
-char temp ;
-    if(( var_arg == 'g')||(var_arg == 'G')){
+    char digits[] = {'d', 'i', 'X', 'x', 'u', 'f', 'e', 'E', 'g', 'G'};
+    char temp;
+    if ((var_arg == 'g') || (var_arg == 'G')) {
         temp = 'f';
-    }
-    else {temp = var_arg;}
+    } else { temp = var_arg; }
     flag_insertion(text_array, flags, my_double, var_arg);
     convert_float_to_string(text_array, my_double, after_point, before_point, temp);
-   if(( var_arg == 'g')||(var_arg == 'G')){
-       suppress_trailing_zeros(text_array);
-   }
+    if ((var_arg == 'g') || (var_arg == 'G')) {
+        if (!check_in('#', flags->array, flags->used)) {
+            suppress_trailing_zeros(text_array);
+        } else { text_array->used -= 1; }
+    }
+    if ((check_in(var_arg, digits, 10)) && (check_in('0', flags->array, flags->used))) { fill_blank_space(text_array); }
+
+
+    free_array(flags);
 
 }
 
@@ -412,8 +421,6 @@ void hexa_octa_formating(s_array *text_array, s_array *flags, unsigned int to_co
     is_octa = (var_arg == 'o') ? TRUE : FALSE;
     flag_insertion(text_array, flags, to_convert, var_arg);
     convert_to_octal_or_dec(text_array, to_convert, is_octa);
-
-
 }
 
 
@@ -436,33 +443,41 @@ void flag_insertion(s_array *text_array, s_array *flags, double flag_conditions,
         }
 
     }
-    free_array(flags);
 
 }
 
 void suppress_trailing_zeros(s_array *text_array) {
-    int trailing_zeros= 0;
-    int counter ;
-    if(!is_decimal(text_array->array)){ return;}
-    if(text_array->array[text_array->used -1 ]!='0'){ return;}
-    counter = text_array->used -1 ;
-    while ((text_array->array[counter] == '0') || (text_array->array[counter] == '.')){
+    int trailing_zeros = 0;
+    int counter;
+    if (!is_decimal(text_array->array)) { return; }
+    if (text_array->array[text_array->used - 1] != '0') { return; }
+    counter = text_array->used - 1;
+    while ((text_array->array[counter] == '0') || (text_array->array[counter] == '.')) {
 
         ++trailing_zeros;
-        if(text_array->array[counter] == '.'){
+        if (text_array->array[counter] == '.') {
             break;
         }
         --counter;
 
     }
-text_array->used-=trailing_zeros;
+    text_array->used -= trailing_zeros;
 }
-int is_decimal(char *array_of_char){
-    for(int i = 0 ; i < len_of(array_of_char); ++i){
-        if(array_of_char[i] == '.'){ return TRUE;}
+
+int is_decimal(char *array_of_char) {
+    for (int i = 0; i < len_of(array_of_char); ++i) {
+        if (array_of_char[i] == '.') { return TRUE; }
     }
     return FALSE;
 
+}
+
+void fill_blank_space(s_array *text_array) {
+    int compteur = 0;
+    while (!isdigit(text_array->array[compteur]))  {
+        (text_array->array[compteur] == ' ')?text_array->array[compteur]='0' : ' ';
+        ++compteur;
+    }
 }
 
 /*
