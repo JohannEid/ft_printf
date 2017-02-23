@@ -84,11 +84,11 @@ void format_output(char variable_type, va_list argument_list,
     switch (variable_type) {
         case 'u':
             unsigned_int_formating(&array, flags, va_arg(argument_list, unsigned
-                    int));
+                    int), before_point);
             break;
         case 'd':
         case 'i':
-            int_formating(&array, flags, va_arg(argument_list, int));
+            int_formating(&array, flags, va_arg(argument_list, int), before_point);
             break;
         case 'c':
             //not forced to use array but code is cleaner ... :)
@@ -110,7 +110,7 @@ void format_output(char variable_type, va_list argument_list,
         case 'x':
         case 'X':
             hexa_octa_formating(&array, flags, va_arg(argument_list, unsigned
-                    int), variable_type);
+                    int), variable_type, before_point);
             break;
     }
     screen_output(array.array, array.used);
@@ -118,28 +118,36 @@ void format_output(char variable_type, va_list argument_list,
 }
 
 
-void convert_to_string(s_array *array, int num_to_convert, int is_signed) {
+void convert_to_string(s_array *array, int num_to_convert, int is_signed, int width) {
     char digit;
     int compteur = 0;
     unsigned int unumber_to_conv;
+    s_array buffer_array;
+
+    init_array(&buffer_array, 1);
 
     if (num_to_convert == 0) {
-        insert_in_array(array, '0');
-        return;
+        insert_in_array(&buffer_array, '0');
     } else if (num_to_convert < -0.0) {
         if (is_signed) {
-            insert_in_array(array, '-');
+            insert_in_array(&buffer_array, '-');
         }
         num_to_convert *= -1;
     }
 
     while (num_to_convert > 0) {
         digit = num_to_convert % 10 + '0';
-        (array->array[compteur] == ' ') ? array->array[compteur] = digit : insert_in_array(array, digit);
+        insert_in_array(&buffer_array, digit);
         num_to_convert /= 10;
         ++compteur;
     }
-    string_reverse(array);
+    string_reverse(&buffer_array);
+    width -= buffer_array.used;
+    add_char(array, width, ' ');
+
+    concatenate(array, &buffer_array);
+
+    free_array(&buffer_array);
 
 }
 
@@ -255,43 +263,32 @@ int len_of(const char *array) {
 void convert_float_to_string(s_array *array, double to_convert, int precision, int width_precision,
                              char variable_type) {
     int spaces;
-    s_array array_integer;
-    s_array array_decimal;
     int integer;
     double floating_num;
     int decimal;
-
     int power_of_ten;
-    init_array(&array_decimal, 1);
-    init_array(&array_integer, 1);
+
     power_of_ten = (variable_type != 'f') ?
                    get_scientific_notation(&to_convert) : number_of_zeros(&to_convert);
 
     integer = (int) to_convert;
     floating_num = to_convert - integer;
-
     decimal = (precision == 0) ? floating_num * power(10, 6) :
               floating_num * power(10, precision);
     precision = (precision == 0) ? 6 : precision;
-    convert_to_string(&array_integer, integer, TRUE);
-    add_char(array, width_precision - array_integer.used - precision - 1, ' ');
-    concatenate(array, &array_integer);
+    convert_to_string(array, integer, TRUE,width_precision -precision );
     insert_in_array(array, '.');
     if ((power_of_ten < 0) & (variable_type == 'f') && (integer == 0)) {
         add_char(array, (power_of_ten * -1 - 1), '0');
     }
-    convert_to_string(&array_decimal, decimal, FALSE);
-    (decimal != 0) ? concatenate(array, &array_decimal) : ' ';
-    (decimal == 0) ? add_char(array, precision, '0') : ' ';
+    convert_to_string(array, decimal, FALSE, width_precision);
+    (decimal == 0) ? add_char(array, precision -1 , '0') : ' ';
     (variable_type != 'f') ? add_power_of_ten_precision(array, power_of_ten, variable_type) : ' ';
-
-    free_array(&array_decimal);
-    free_array(&array_integer);
 
 }
 
 // maybe I should have made a function for each but process so similar seems like a waste ..
-void convert_to_octal_or_dec(s_array *array, unsigned int to_convert, int is_octal) {
+void convert_to_octal_or_dec(s_array *array, unsigned int to_convert, int is_octal,int width) {
     char rest = '0';
     int quotient = to_convert;
     unsigned int result = 0;
@@ -306,7 +303,7 @@ void convert_to_octal_or_dec(s_array *array, unsigned int to_convert, int is_oct
     }
     if (is_octal) {
         result += quotient * power(10, compteur);
-        convert_to_string(array, result, TRUE);
+        convert_to_string(array, result, TRUE,width);
     } else {
         rest = quotient;
         insert_in_array(array, match_int_to_char(rest));
@@ -378,26 +375,28 @@ int check_in(char to_check, char tab_check[], int size_of_tab) {
     return 0;
 }
 
-void unsigned_int_formating(s_array *text_array, s_array *flags, unsigned int uint) {
+void unsigned_int_formating(s_array *text_array, s_array *flags, unsigned int uint, int width) {
     const char msg_error[] = "Error unsigned int can't be signed ...\n ";
 
     flag_insertion(text_array, flags, uint, 'u');
-    convert_to_string(text_array, uint, TRUE);
+    convert_to_string(text_array, uint, TRUE, width);
     if (text_array->array[0] == '-') {
         write(2, msg_error, sizeof(msg_error)) != sizeof(msg_error);
     }
+    flag_insertion_end(text_array, flags, uint, 'u');
 
 }
 
-void int_formating(s_array *text_array, s_array *flags, int my_int) {
+void int_formating(s_array *text_array, s_array *flags, int my_int, int width) {
 
     flag_insertion(text_array, flags, my_int, 'd');
-    convert_to_string(text_array, my_int, TRUE);
+    convert_to_string(text_array, my_int, TRUE, width);
+    flag_insertion_end(text_array, flags, my_int, 'd');
+
 }
 
 void float_formating(s_array *text_array, s_array *flags, double my_double, char var_arg,
                      int after_point, int before_point) {
-    char digits[] = {'d', 'i', 'X', 'x', 'u', 'f', 'e', 'E', 'g', 'G'};
     char temp;
     if ((var_arg == 'g') || (var_arg == 'G')) {
         temp = 'f';
@@ -409,20 +408,30 @@ void float_formating(s_array *text_array, s_array *flags, double my_double, char
             suppress_trailing_zeros(text_array);
         } else { text_array->used -= 1; }
     }
-    if ((check_in(var_arg, digits, 10)) && (check_in('0', flags->array, flags->used))) { fill_blank_space(text_array); }
+    flag_insertion_end(text_array, flags, my_double, var_arg);
+
 
 
     free_array(flags);
 
 }
 
-void hexa_octa_formating(s_array *text_array, s_array *flags, unsigned int to_convert, char var_arg) {
+void hexa_octa_formating(s_array *text_array, s_array *flags, unsigned int to_convert, char var_arg, int width) {
     int is_octa = FALSE;
     is_octa = (var_arg == 'o') ? TRUE : FALSE;
     flag_insertion(text_array, flags, to_convert, var_arg);
-    convert_to_octal_or_dec(text_array, to_convert, is_octa);
+    convert_to_octal_or_dec(text_array, to_convert, is_octa, width);
+    flag_insertion_end(text_array, flags, to_convert, var_arg);
+
 }
 
+void flag_insertion_end(s_array *text_array, s_array *flags,double flag_conditions,char type_format){
+    char number_types [] = {'d', 'i', 'X', 'x', 'u', 'f', 'e', 'E', 'g', 'G'};
+
+    if ((check_in(type_format, number_types, 10)) &&
+        (check_in('0', flags->array, flags->used))) {
+        fill_blank_space(text_array); }
+}
 
 void flag_insertion(s_array *text_array, s_array *flags, double flag_conditions, char type_format) {
 
@@ -441,9 +450,7 @@ void flag_insertion(s_array *text_array, s_array *flags, double flag_conditions,
             insert_in_array(text_array, '0');
             insert_in_array(text_array, type_format);
         }
-
     }
-
 }
 
 void suppress_trailing_zeros(s_array *text_array) {
@@ -473,27 +480,10 @@ int is_decimal(char *array_of_char) {
 }
 
 void fill_blank_space(s_array *text_array) {
-    int compteur = 0;
-    while (!isdigit(text_array->array[compteur]))  {
-        (text_array->array[compteur] == ' ')?text_array->array[compteur]='0' : ' ';
-        ++compteur;
+    char digits [] = {'0','1','2','3','4','5','6','7','8','9'};
+    for(int i = 0 ; i < text_array->used;++i)
+    {
+        if(check_in(text_array->array[i],digits,10)){ break;}
+        (text_array->array[i] == ' ') ? text_array->array[i] = '0' : ' ';
     }
 }
-
-/*
-void convert_uint_to_string (s_array* array , unsigned int  num_to_convert) {
-int compteur = 0;
-    char digit;
-
-    while (num_to_convert > 0) {
-        digit = num_to_convert % 10 + '0';
-        array->array[compteur] == ' ' ? array->array[compteur] = digit : insert_in_array(array, digit);
-        insert_in_array(array, digit);
-        num_to_convert /= 10;
-        ++compteur;
-    }
-    string_reverse(array);
-
-}
-
-*/

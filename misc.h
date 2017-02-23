@@ -23,7 +23,7 @@ void convert_a_string(s_array *array, const char *string_to_conv, int before_poi
 
 void convert_to_character(s_array *array, int ascii_code);
 
-void convert_to_string(s_array *array, int num_to_convert, int is_signed);
+void convert_to_string(s_array *array, int num_to_convert, int is_signed,int width);
 
 int convert_string_to_int(s_array *array_to_convert);
 
@@ -42,7 +42,7 @@ int len_of(const char *array);
 void convert_float_to_string(s_array *array, double to_convert, int precision, int width_precision,
                              char variabe_type);
 
-void convert_to_octal_or_dec(s_array *array, unsigned int to_convert, int is_octal);
+void convert_to_octal_or_dec(s_array *array, unsigned int to_convert, int is_octal,int width);
 
 char match_int_to_char(char to_match);
 
@@ -55,16 +55,19 @@ int number_of_zeros(double *to_get_zeros);
 
 int check_in (char to_check,   char tab_check[], int size_of_tab);
 
-void unsigned_int_formating (s_array *text_array, s_array *flags, unsigned int uint);
+void unsigned_int_formating (s_array *text_array, s_array *flags, unsigned int uint,int width);
 
-void int_formating (s_array *text_array, s_array *flags, int my_int);
+void int_formating (s_array *text_array, s_array *flags, int my_int,int width);
 
 void float_formating(s_array *text_array, s_array *flags, double my_double, char var_arg, int after_point,
 int before_point);
 
-void hexa_octa_formating (s_array *text_array,s_array *flags, unsigned int to_convert,char var_arg);
+void hexa_octa_formating (s_array *text_array,s_array *flags, unsigned int to_convert,char var_arg,int width);
 
 void flag_insertion(s_array *text_array, s_array *flags,double flag_conditions,char type_format);
+
+void flag_insertion_end(s_array *text_array, s_array *flags,double flag_conditions,char type_format);
+
 
 void suppress_trailing_zeros(s_array *text_array);
 
