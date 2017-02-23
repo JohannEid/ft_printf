@@ -48,10 +48,10 @@ char match_int_to_char(char to_match);
 
 void add_power_of_ten_precision(s_array *array, int power_of_ten, char var);
 
-int get_scientific_notation(double *to_get_power);
+int get_scientific_notation(double &to_get_power);
 
 //for decimal numbers
-int number_of_zeros(double *to_get_zeros);
+int number_of_zeros(double to_get_zeros);
 
 int check_in (char to_check,   char tab_check[], int size_of_tab);
 
@@ -74,6 +74,8 @@ void suppress_trailing_zeros(s_array *text_array);
 int is_decimal(char *array_of_char);
 
 void fill_blank_space(s_array *text_array);
+
+int get_power_of_ten(double to_get_power);
 
 
 

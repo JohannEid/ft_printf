@@ -143,12 +143,10 @@ void convert_to_string(s_array *array, int num_to_convert, int is_signed, int wi
     }
     string_reverse(&buffer_array);
     width -= buffer_array.used;
-    add_char(array, width, ' ');
+    add_char(array, width -1 , ' ');
 
     concatenate(array, &buffer_array);
-
     free_array(&buffer_array);
-
 }
 
 void string_reverse(s_array *to_reverse) {
@@ -268,8 +266,10 @@ void convert_float_to_string(s_array *array, double to_convert, int precision, i
     int decimal;
     int power_of_ten;
 
-    power_of_ten = (variable_type != 'f') ?
+
+   power_of_ten = (variable_type != 'f') ?
                    get_scientific_notation(&to_convert) : number_of_zeros(&to_convert);
+
 
     integer = (int) to_convert;
     floating_num = to_convert - integer;
@@ -281,10 +281,9 @@ void convert_float_to_string(s_array *array, double to_convert, int precision, i
     if ((power_of_ten < 0) & (variable_type == 'f') && (integer == 0)) {
         add_char(array, (power_of_ten * -1 - 1), '0');
     }
-    convert_to_string(array, decimal, FALSE, width_precision);
+    convert_to_string(array, decimal, FALSE, 0);
     (decimal == 0) ? add_char(array, precision -1 , '0') : ' ';
     (variable_type != 'f') ? add_power_of_ten_precision(array, power_of_ten, variable_type) : ' ';
-
 }
 
 // maybe I should have made a function for each but process so similar seems like a waste ..
@@ -303,6 +302,7 @@ void convert_to_octal_or_dec(s_array *array, unsigned int to_convert, int is_oct
     }
     if (is_octal) {
         result += quotient * power(10, compteur);
+        if(array->array[0]=='#'){array->array[0]='0';}
         convert_to_string(array, result, TRUE,width);
     } else {
         rest = quotient;
@@ -334,28 +334,25 @@ void add_power_of_ten_precision(s_array *array, int power_of_ten, char var) {
     } else if (power_of_ten > 9) { insert_in_array(array, to_insert); }
 }
 
-int get_scientific_notation(double *to_get_power) {
+int get_scientific_notation(double &to_get_power) {
+
     int compteur = 0;
     double multiple_of_10 = 10;
     double temp;
     //numbers starting by 0.000
-    temp = (*to_get_power < 0) ? -(*to_get_power) : *to_get_power;
+    temp = (to_get_power < 0) ? -(to_get_power) : to_get_power;
     if (temp >= 1) {
-        multiple_of_10 = 10;
-        while (temp > multiple_of_10) {
-            ++compteur;
-            multiple_of_10 *= 10;
-        }
+      compteur = get_power_of_ten(to_get_power);
     } else if (temp < 1) { compteur = number_of_zeros(to_get_power); }
 
-    *to_get_power *= power(10, -compteur);
+    to_get_power *= power(10, -compteur);
 
-    return compteur;
+    return to_get_power;
 }
 
-int number_of_zeros(double *to_get_zeros) {
+int number_of_zeros(double to_get_zeros) {
 
-    double temp = (*to_get_zeros < 0) ? -(*to_get_zeros) : *to_get_zeros;
+    double temp = (to_get_zeros < 0) ? -(to_get_zeros) : to_get_zeros;
     double multiple_of_10 = 0.1;
     int compteur = 0;
 
@@ -365,6 +362,28 @@ int number_of_zeros(double *to_get_zeros) {
         ++compteur;
     }
     return -(compteur + 1);
+}
+
+int get_power_of_ten(double to_get_power){
+    int compteur = 0;
+    int multiple_of_10;
+
+    if(to_get_power  < 1   ){
+        multiple_of_10 = 0.1;
+        while (to_get_power > multiple_of_10) {
+            multiple_of_10 *= 0.1;
+            ++compteur;
+        }
+        return -(compteur + 1);
+    }
+    else if (to_get_power >=1 ){
+        multiple_of_10 = 10;
+        while (to_get_power <= multiple_of_10) {
+            multiple_of_10 *= 10;
+            ++compteur;
+        }return compteur;
+    }
+
 }
 
 int check_in(char to_check, char tab_check[], int size_of_tab) {
