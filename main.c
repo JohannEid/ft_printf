@@ -21,14 +21,14 @@ int main() {
     char letter = 'a';
     int number = 345;
     int unumber = 356;
-    double my_double = 2453.2500;
+    double my_double = 0.00253514;
     double my_double_1 = 0.253514;
     char project_review  [] = "this project is awesome!!";
 
 
-    printf("%3.5E",my_double);
+    printf("%3.5f",my_double);
     printf("\n");
-    ft_printf("%3.5e %3.5e %3.5e %3.5e  ",my_double,my_double,my_double,my_double);
+    ft_printf("%3.5f ",my_double);
 
     /*
    // ft_printf("%+010d",number)ft_printf("%+010f",my_double);

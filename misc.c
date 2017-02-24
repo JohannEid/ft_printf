@@ -143,7 +143,7 @@ void convert_to_string(s_array *array, int num_to_convert, int is_signed, int wi
     }
     string_reverse(&buffer_array);
     width -= buffer_array.used;
-    add_char(array, width -1 , ' ');
+    add_char(array, width - 1, ' ');
 
     concatenate(array, &buffer_array);
     free_array(&buffer_array);
@@ -266,9 +266,8 @@ void convert_float_to_string(s_array *array, double to_convert, int precision, i
     int decimal;
     int power_of_ten;
 
-
-   power_of_ten = (variable_type != 'f') ?
-                   get_scientific_notation(&to_convert) : number_of_zeros(&to_convert);
+    power_of_ten = get_power_of_ten(to_convert);
+  if(variable_type !='f'){to_convert = get_scientific_notation(to_convert, power_of_ten);}
 
 
     integer = (int) to_convert;
@@ -276,18 +275,18 @@ void convert_float_to_string(s_array *array, double to_convert, int precision, i
     decimal = (precision == 0) ? floating_num * power(10, 6) :
               floating_num * power(10, precision);
     precision = (precision == 0) ? 6 : precision;
-    convert_to_string(array, integer, TRUE,width_precision -precision );
+    convert_to_string(array, integer, TRUE, width_precision - precision);
     insert_in_array(array, '.');
     if ((power_of_ten < 0) & (variable_type == 'f') && (integer == 0)) {
         add_char(array, (power_of_ten * -1 - 1), '0');
     }
     convert_to_string(array, decimal, FALSE, 0);
-    (decimal == 0) ? add_char(array, precision -1 , '0') : ' ';
+    (decimal == 0) ? add_char(array, precision - 1, '0') : ' ';
     (variable_type != 'f') ? add_power_of_ten_precision(array, power_of_ten, variable_type) : ' ';
 }
 
 // maybe I should have made a function for each but process so similar seems like a waste ..
-void convert_to_octal_or_dec(s_array *array, unsigned int to_convert, int is_octal,int width) {
+void convert_to_octal_or_dec(s_array *array, unsigned int to_convert, int is_octal, int width) {
     char rest = '0';
     int quotient = to_convert;
     unsigned int result = 0;
@@ -302,8 +301,8 @@ void convert_to_octal_or_dec(s_array *array, unsigned int to_convert, int is_oct
     }
     if (is_octal) {
         result += quotient * power(10, compteur);
-        if(array->array[0]=='#'){array->array[0]='0';}
-        convert_to_string(array, result, TRUE,width);
+        if (array->array[0] == '#') { array->array[0] = '0'; }
+        convert_to_string(array, result, TRUE, width);
     } else {
         rest = quotient;
         insert_in_array(array, match_int_to_char(rest));
@@ -334,54 +333,31 @@ void add_power_of_ten_precision(s_array *array, int power_of_ten, char var) {
     } else if (power_of_ten > 9) { insert_in_array(array, to_insert); }
 }
 
-int get_scientific_notation(double &to_get_power) {
 
-    int compteur = 0;
-    double multiple_of_10 = 10;
-    double temp;
-    //numbers starting by 0.000
-    temp = (to_get_power < 0) ? -(to_get_power) : to_get_power;
-    if (temp >= 1) {
-      compteur = get_power_of_ten(to_get_power);
-    } else if (temp < 1) { compteur = number_of_zeros(to_get_power); }
+double get_scientific_notation(double to_get_power,int power_of_ten) {
 
-    to_get_power *= power(10, -compteur);
-
-    return to_get_power;
+    return to_get_power * power(10,-power_of_ten);
 }
 
-int number_of_zeros(double to_get_zeros) {
 
-    double temp = (to_get_zeros < 0) ? -(to_get_zeros) : to_get_zeros;
-    double multiple_of_10 = 0.1;
+int get_power_of_ten(double to_get_power) {
     int compteur = 0;
+    double multiple_of_10;
 
-
-    while (temp <= multiple_of_10) {
-        multiple_of_10 *= 0.1;
-        ++compteur;
-    }
-    return -(compteur + 1);
-}
-
-int get_power_of_ten(double to_get_power){
-    int compteur = 0;
-    int multiple_of_10;
-
-    if(to_get_power  < 1   ){
+    if (to_get_power < 1) {
         multiple_of_10 = 0.1;
-        while (to_get_power > multiple_of_10) {
+        while (to_get_power < multiple_of_10) {
             multiple_of_10 *= 0.1;
             ++compteur;
         }
         return -(compteur + 1);
-    }
-    else if (to_get_power >=1 ){
+    } else if (to_get_power >= 1) {
         multiple_of_10 = 10;
-        while (to_get_power <= multiple_of_10) {
+        while (to_get_power > multiple_of_10) {
             multiple_of_10 *= 10;
             ++compteur;
-        }return compteur;
+        }
+        return compteur;
     }
 
 }
@@ -430,7 +406,6 @@ void float_formating(s_array *text_array, s_array *flags, double my_double, char
     flag_insertion_end(text_array, flags, my_double, var_arg);
 
 
-
     free_array(flags);
 
 }
@@ -444,12 +419,13 @@ void hexa_octa_formating(s_array *text_array, s_array *flags, unsigned int to_co
 
 }
 
-void flag_insertion_end(s_array *text_array, s_array *flags,double flag_conditions,char type_format){
-    char number_types [] = {'d', 'i', 'X', 'x', 'u', 'f', 'e', 'E', 'g', 'G'};
+void flag_insertion_end(s_array *text_array, s_array *flags, double flag_conditions, char type_format) {
+    char number_types[] = {'d', 'i', 'X', 'x', 'u', 'f', 'e', 'E', 'g', 'G'};
 
     if ((check_in(type_format, number_types, 10)) &&
         (check_in('0', flags->array, flags->used))) {
-        fill_blank_space(text_array); }
+        fill_blank_space(text_array);
+    }
 }
 
 void flag_insertion(s_array *text_array, s_array *flags, double flag_conditions, char type_format) {
@@ -499,10 +475,9 @@ int is_decimal(char *array_of_char) {
 }
 
 void fill_blank_space(s_array *text_array) {
-    char digits [] = {'0','1','2','3','4','5','6','7','8','9'};
-    for(int i = 0 ; i < text_array->used;++i)
-    {
-        if(check_in(text_array->array[i],digits,10)){ break;}
+    char digits[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
+    for (int i = 0; i < text_array->used; ++i) {
+        if (check_in(text_array->array[i], digits, 10)) { break; }
         (text_array->array[i] == ' ') ? text_array->array[i] = '0' : ' ';
     }
 }

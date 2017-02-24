@@ -48,8 +48,7 @@ char match_int_to_char(char to_match);
 
 void add_power_of_ten_precision(s_array *array, int power_of_ten, char var);
 
-int get_scientific_notation(double &to_get_power);
-
+double get_scientific_notation(double to_get_power,int power_of_ten);
 //for decimal numbers
 int number_of_zeros(double to_get_zeros);
 
