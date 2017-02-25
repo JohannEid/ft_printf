@@ -121,7 +121,7 @@ void format_output(char variable_type, va_list argument_list,
 void convert_to_string(s_array *array, int num_to_convert, int is_signed, int width) {
     char digit;
     int compteur = 0;
-    unsigned int unumber_to_conv;
+    int unumber_to_conv;
     s_array buffer_array;
 
     init_array(&buffer_array, 1);
@@ -143,7 +143,7 @@ void convert_to_string(s_array *array, int num_to_convert, int is_signed, int wi
     }
     string_reverse(&buffer_array);
     width -= buffer_array.used;
-    add_char(array, width - 1, ' ');
+    add_char(array, width , ' ');
 
     concatenate(array, &buffer_array);
     free_array(&buffer_array);
@@ -260,11 +260,11 @@ int len_of(const char *array) {
 
 void convert_float_to_string(s_array *array, double to_convert, int precision, int width_precision,
                              char variable_type) {
-    int spaces;
-    int integer;
-    double floating_num;
-    int decimal;
-    int power_of_ten;
+    int spaces = 0;
+    int integer = 0 ;
+    double floating_num = 0;
+    int decimal = 0 ;
+    int power_of_ten = 0;
 
     power_of_ten = get_power_of_ten(to_convert);
   if(variable_type !='f'){to_convert = get_scientific_notation(to_convert, power_of_ten);}
@@ -278,8 +278,7 @@ void convert_float_to_string(s_array *array, double to_convert, int precision, i
     convert_to_string(array, integer, TRUE, width_precision - precision);
     insert_in_array(array, '.');
     if ((power_of_ten < 0) & (variable_type == 'f') && (integer == 0)) {
-        add_char(array, (power_of_ten * -1 - 1), '0');
-    }
+        add_char(array, (power_of_ten * -1 - 1), '0');}
     convert_to_string(array, decimal, FALSE, 0);
     (decimal == 0) ? add_char(array, precision - 1, '0') : ' ';
     (variable_type != 'f') ? add_power_of_ten_precision(array, power_of_ten, variable_type) : ' ';
@@ -306,8 +305,7 @@ void convert_to_octal_or_dec(s_array *array, unsigned int to_convert, int is_oct
     } else {
         rest = quotient;
         insert_in_array(array, match_int_to_char(rest));
-        string_reverse(array);
-    }
+        string_reverse(array); }
 }
 
 char match_int_to_char(char to_match) {
