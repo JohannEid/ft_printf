@@ -1,5 +1,6 @@
 #include "misc.h"
 #include <math.h>
+
 /*COVERED FEATURES
  * c 	Character
 d or i 	Signed decimal integer
@@ -17,15 +18,17 @@ X 	Unsigned hexadecimal integer (capital letters)
 
 int main() {
     float number2 = -2;
-    int number3 =-161235;
+    int number3 = -161235;
     char letter = 'a';
     int number = 345;
     int unumber = 356;
-    double my_double = 0.00253514;
+    double my_double = -0.00253514;
     double my_double_1 = 0.253514;
-    char project_review  [] = "this project is awesome!!";
+    char project_review[] = "this project is awesome!!";
+    int Fahrenheit;
 
 
+/*
     printf(":%s:\n", "Hello, world!");
     printf(":%15s:\n", "Hello, world!");
     printf(":%.10s:\n", "Hello, world!");
@@ -35,7 +38,7 @@ int main() {
     printf(":%15.10s:\n", "Hello, world!");
     printf(":%-15.10s:\n", "Hello, world!");
 
-    printf("\n my printf");
+    printf("\nMY PRINTF\n");
 
     ft_printf(":%s:\n", "Hello, world!");
     ft_printf(":%15s:\n", "Hello, world!");
@@ -45,6 +48,74 @@ int main() {
     ft_printf(":%.15s:\n", "Hello, world!");
     ft_printf(":%15.10s:\n", "Hello, world!");
     ft_printf(":%-15.10s:\n", "Hello, world!");
+
+
+    printf("The color: %s\n", "blue");
+    printf("First number: %d\n", 12345);
+    printf("Second number: %04d\n", 25);
+    printf("Third number: %i\n", 1234);
+    printf("Float number: %3.2f\n", 3.14159);
+    printf("Hexadecimal: %x\n", 255);
+    printf("Octal: %o\n", 255);
+    printf("Unsigned value: %u\n", 150);
+    printf("Just print the percentage sign %%\n", 10);
+
+    printf("\nMY PRINTF\n");
+
+    ft_printf("The color: %s\n", "blue");
+    ft_printf("First number: %d\n", 12345);
+    ft_printf("Second number: %04d\n", 25);
+    ft_printf("Third number: %i\n", 1234);
+    ft_printf("Float number: %3.2f\n", 3.14159);
+    ft_printf("Hexadecimal: %x\n", 255);
+    ft_printf("Octal: %o\n", 255);
+    ft_printf("Unsigned value: %u\n", 150);
+    ft_printf("Just print the percentage sign %%\n", 10);
+
+    */
+
+    for (Fahrenheit = 0; Fahrenheit <= 300; Fahrenheit = Fahrenheit + 20)
+        printf("%3d %06.3f\n", Fahrenheit, (5.0/9.0)*(Fahrenheit-32));
+
+    printf("\nMY PRINTF\n");
+
+    for (Fahrenheit = 0; Fahrenheit <= 300; Fahrenheit = Fahrenheit + 20)
+        ft_printf("%3d %06.3f\n", Fahrenheit, (5.0/9.0)*(Fahrenheit-32));
+
+
+
+    /* printf("%6.3f", (5.0 / 9.0) * (20 - 32));
+     printf("\n");
+     ft_printf("%6.3f", -0.402);
+ */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -95,5 +166,5 @@ int main() {
               letter,number3,unumber,my_double,my_double,my_double,my_double,unumber,unumber,unumber,project_review,
               my_double,project_review,number2,my_double_1,my_double_1,my_double_1,my_double_1);
 */
- return 0;
+    return 0;
 }

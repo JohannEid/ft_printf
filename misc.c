@@ -31,8 +31,7 @@ void ft_printf(char *to_print, ...) {
         if (to_print[i] != '%') {
             insert_in_array(&char_array, to_print[i]);
             //1 bit = 1 char so ok to write
-        } else if ((to_print[i] == '%') && (to_print[i + 1] == '%')) { ++i; }
-        else if (to_print[i] == '%') {
+        } else if (to_print[i] == '%') {
             screen_output(char_array.array, char_array.used);
             ++i;
             while (check_in(to_print[i], my_flags, 5)) {
@@ -72,6 +71,7 @@ void ft_printf(char *to_print, ...) {
 
 void format_output(char variable_type, va_list argument_list,
                    s_array *digits_before_point, s_array *digits_after_point, s_array *flags) {
+
     const char *string_argument;
     s_array array;
     init_array(&array, 1);
@@ -104,6 +104,7 @@ void format_output(char variable_type, va_list argument_list,
         case 'f':
         case 'g':
         case 'G':
+
             float_formating(&array, flags, va_arg(argument_list, double), variable_type, after_point,
                             before_point);
             break;
@@ -113,6 +114,8 @@ void format_output(char variable_type, va_list argument_list,
             hexa_octa_formating(&array, flags, va_arg(argument_list, unsigned
                     int), variable_type, before_point);
             break;
+        case '%':
+            insert_in_array(&array, '%');
     }
     screen_output(array.array, array.used);
     free_array(&array);
@@ -130,7 +133,7 @@ void convert_to_string(s_array *array, int num_to_convert, int is_signed, int wi
 
     if (num_to_convert == 0) {
         insert_in_array(&buffer_array, '0');
-    } else if (num_to_convert < -0.0) {
+    } else if (num_to_convert < -0) {
         if (is_signed) {
             insert_in_array(&buffer_array, '-');
         }
@@ -275,7 +278,7 @@ void convert_float_to_string(s_array *array, double to_convert, int precision, i
     decimal = (precision == 0) ? floating_num * power(10, 6) :
               floating_num * power(10, precision);
     precision = (precision == 0) ? 6 : precision;
-    convert_to_string(array, integer, TRUE, width_precision - precision);
+    convert_to_string(array, integer, TRUE, width_precision - precision - 1);
     insert_in_array(array, '.');
     if ((power_of_ten < 0) & (variable_type == 'f') && (integer == 0)) {
         add_char(array, (power_of_ten * -1 - 1), '0');
@@ -287,7 +290,7 @@ void convert_float_to_string(s_array *array, double to_convert, int precision, i
 }
 
 // maybe I should have made a function for each but process so similar seems like a waste ..
-void convert_to_octal_or_dec(s_array *array, unsigned int to_convert, int is_octal, int width) {
+void convert_to_octal_or_dec(s_array *array, unsigned int to_convert, int is_octal, int width, int is_upper) {
     char rest = '0';
     int quotient = to_convert;
     unsigned int result = 0;
@@ -297,7 +300,7 @@ void convert_to_octal_or_dec(s_array *array, unsigned int to_convert, int is_oct
     while (quotient >= div) {
         rest = quotient % div;
         quotient = (quotient - rest) / div;
-        (is_octal) ? result += rest * power(10, compteur) : insert_in_array(array, match_int_to_char(rest));
+        (is_octal) ? result += rest * power(10, compteur) : insert_in_array(array, match_int_to_char(rest, is_upper));
         ++compteur;
     }
     if (is_octal) {
@@ -306,16 +309,17 @@ void convert_to_octal_or_dec(s_array *array, unsigned int to_convert, int is_oct
         convert_to_string(array, result, TRUE, width);
     } else {
         rest = quotient;
-        insert_in_array(array, match_int_to_char(rest));
+        insert_in_array(array, match_int_to_char(rest, is_upper));
         string_reverse(array);
     }
 }
 
-char match_int_to_char(char to_match) {
+char match_int_to_char(char to_match, int is_upper) {
+    char to_return;
     char tab_char[6] = {'A', 'B', 'C', 'D', 'E', 'F'};
     if ((int) to_match < 10) { return to_match + '0'; }
-
-    return tab_char[(int) to_match % 10];
+    to_return = is_upper ? tab_char[(int) to_match % 10] : lower(tab_char[(int) to_match % 10]);
+    return to_return;
 }
 
 void add_power_of_ten_precision(s_array *array, int power_of_ten, char var) {
@@ -344,15 +348,16 @@ double get_scientific_notation(double to_get_power, int power_of_ten) {
 int get_power_of_ten(double to_get_power) {
     int compteur = 0;
     double multiple_of_10;
+    double temp = (to_get_power < 0) ? -(to_get_power) : to_get_power;
 
-    if (to_get_power < 1) {
+    if (temp < 1) {
         multiple_of_10 = 0.1;
         while (to_get_power < multiple_of_10) {
             multiple_of_10 *= 0.1;
             ++compteur;
         }
         return -(compteur + 1);
-    } else if (to_get_power >= 1) {
+    } else if (temp >= 1) {
         multiple_of_10 = 10;
         while (to_get_power > multiple_of_10) {
             multiple_of_10 *= 10;
@@ -393,6 +398,7 @@ void int_formating(s_array *text_array, s_array *flags, int my_int, int width) {
 
 void float_formating(s_array *text_array, s_array *flags, double my_double, char var_arg,
                      int after_point, int before_point) {
+
     char temp;
     before_point = (check_in('-', flags->array, flags->used)) ? -(before_point) : before_point;
     if ((var_arg == 'g') || (var_arg == 'G')) {
@@ -414,9 +420,11 @@ void float_formating(s_array *text_array, s_array *flags, double my_double, char
 
 void hexa_octa_formating(s_array *text_array, s_array *flags, unsigned int to_convert, char var_arg, int width) {
     int is_octa = FALSE;
+    int is_upper;
+    is_upper = (var_arg == 'X') ? TRUE : FALSE;
     is_octa = (var_arg == 'o') ? TRUE : FALSE;
     flag_insertion(text_array, flags, to_convert, var_arg);
-    convert_to_octal_or_dec(text_array, to_convert, is_octa, width);
+    convert_to_octal_or_dec(text_array, to_convert, is_octa, width, is_upper);
     flag_insertion_end(text_array, flags, to_convert, var_arg);
 
 }
@@ -482,8 +490,24 @@ int is_decimal(char *array_of_char) {
 
 void fill_blank_space(s_array *text_array) {
     char digits[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
+    int is_signed = (check_in('-', text_array->array, text_array->used)) ? TRUE :
+                    (check_in('+', text_array->array, text_array->used)) ? TRUE :
+                    FALSE;
+    int point_reached;
+
     for (int i = 0; i < text_array->used; ++i) {
+        if ((text_array->array[i] == '-') || (text_array->array[i] == '+')) { point_reached = TRUE; }
+        else if (!is_signed) {
+            (text_array->array[i] == ' ') ? text_array->array[i] = '0' : ' '; }
+        else if  (point_reached) {
+            (text_array->array[i] == ' ') ? text_array->array[i] = '0' : ' '; }
         if (check_in(text_array->array[i], digits, 10)) { break; }
-        (text_array->array[i] == ' ') ? text_array->array[i] = '0' : ' ';
     }
+}
+
+char lower(char to_lower) {
+
+    if ((to_lower >= 65) && (to_lower <= 90))
+        to_lower += 32;
+    return to_lower;
 }
