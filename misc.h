@@ -19,7 +19,8 @@ void ft_printf(char *to_print, ...);
 void format_output(char variable_type, va_list argument_list,
                    s_array *digits_before_point, s_array *digits_after_point,s_array *flags);
 
-void convert_a_string(s_array *array, const char *string_to_conv, int before_point, int after_point);
+void convert_a_string(s_array *array, const char *string_to_conv, int before_point, int after_point,
+s_array *flags);
 
 void convert_to_character(s_array *array, int ascii_code);
 

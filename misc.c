@@ -95,7 +95,8 @@ void format_output(char variable_type, va_list argument_list,
             convert_to_character(&array, va_arg(argument_list, int));
             break;
         case 's':
-            convert_a_string(&array, va_arg(argument_list, const char *), before_point, after_point);
+            convert_a_string(&array, va_arg(argument_list, const char *), before_point, after_point,
+                             flags);
             break;
 
         case 'e':
@@ -147,7 +148,7 @@ void convert_to_string(s_array *array, int num_to_convert, int is_signed, int wi
     if (array->array[0] != 'l') {
         add_char(array, width, ' ');
         concatenate(array, &buffer_array);
-    } else if (array->array[0] == 'l') {
+    } else if ((check_in('l', array->array, array->used))) {
         reinitialise_array(array);
         array = ptr;
         concatenate(array, &buffer_array);
@@ -175,28 +176,19 @@ void string_reverse(s_array *to_reverse) {
     (to_reverse->array[0] == '#') ? to_reverse->array[0] = '0' : ' ';
 }
 
-void convert_a_string(s_array *array, const char *string_to_conv, int before_point, int after_point) {
-    int difference = array->used - len_of(string_to_conv);
-    //lengh of string bigger then spaces we have we start at start of array
-
-    (before_point != 0) ? add_char(array, before_point - array->used, ' ') : ' ';
-    if (difference < 0) {
-        for (int i = 0; i < len_of(string_to_conv); ++i) {
-            if (i >= array->used) {
-                insert_in_array(array, string_to_conv[i]);
-            } else {
-                array->array[i] = string_to_conv[i];
-            }
-        }
-    } else if (difference > 0) {
-
-        for (int j = 0; j < len_of(string_to_conv); ++j) {
-            array->array[difference] = string_to_conv[j];
-            ++difference;
-        }
+void convert_a_string(s_array *array, const char *string_to_conv, int before_point, int after_point,
+                      s_array *flags) {
+    if (!check_in('-', flags->array, flags->used)) {
+        add_char(array, before_point - len_of(string_to_conv), ' ');
     }
-    (before_point != 0) ? cut_string(array, len_of(string_to_conv) - after_point) : ' ';
+    for (int i = 0; i < len_of(string_to_conv); ++i) {
+        insert_in_array(array, string_to_conv[i]);
+    }
+    (after_point != 0) ? cut_string(array, len_of(string_to_conv) - after_point) : ' ';
 
+    if (check_in('-', flags->array, flags->used)) {
+        add_char(array, before_point - len_of(string_to_conv), ' ');
+    }
 }
 
 
@@ -272,11 +264,10 @@ void convert_float_to_string(s_array *array, double to_convert, int precision, i
     double floating_num = 0;
     int decimal = 0;
     int power_of_ten = 0;
-    int is_justify = (array->array[0]=='l')?TRUE : FALSE;
+    int is_justify = (array->array[0] == 'l') ? TRUE : FALSE;
 
     power_of_ten = get_power_of_ten(to_convert);
     if (variable_type != 'f') { to_convert = get_scientific_notation(to_convert, power_of_ten); }
-
 
 
     integer = (int) to_convert;
@@ -289,8 +280,8 @@ void convert_float_to_string(s_array *array, double to_convert, int precision, i
     if ((power_of_ten < 0) & (variable_type == 'f') && (integer == 0)) {
         add_char(array, (power_of_ten * -1 - 1), '0');
     }
-    convert_to_string(array, decimal, FALSE,0);
-    if(is_justify){add_char(array,-(width_precision + array->used),' ');}
+    convert_to_string(array, decimal, FALSE, 0);
+    if (is_justify) { add_char(array, -(width_precision + array->used), ' '); }
     (decimal == 0) ? add_char(array, precision - 1, '0') : ' ';
     (variable_type != 'f') ? add_power_of_ten_precision(array, power_of_ten, variable_type) : ' ';
 }
@@ -403,7 +394,7 @@ void int_formating(s_array *text_array, s_array *flags, int my_int, int width) {
 void float_formating(s_array *text_array, s_array *flags, double my_double, char var_arg,
                      int after_point, int before_point) {
     char temp;
-    before_point = (check_in('-',flags->array,flags->used))? -(before_point):before_point;
+    before_point = (check_in('-', flags->array, flags->used)) ? -(before_point) : before_point;
     if ((var_arg == 'g') || (var_arg == 'G')) {
         temp = 'f';
     } else { temp = var_arg; }

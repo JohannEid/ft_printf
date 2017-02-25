@@ -25,9 +25,27 @@ int main() {
     double my_double_1 = 0.253514;
     char project_review  [] = "this project is awesome!!";
 
-    printf("%-10f here I am ",my_double);
-    printf("\n");
-    ft_printf("%-10f here I am ",my_double);
+
+    printf(":%s:\n", "Hello, world!");
+    printf(":%15s:\n", "Hello, world!");
+    printf(":%.10s:\n", "Hello, world!");
+    printf(":%-10s:\n", "Hello, world!");
+    printf(":%-15s:\n", "Hello, world!");
+    printf(":%.15s:\n", "Hello, world!");
+    printf(":%15.10s:\n", "Hello, world!");
+    printf(":%-15.10s:\n", "Hello, world!");
+
+    printf("\n my printf");
+
+    ft_printf(":%s:\n", "Hello, world!");
+    ft_printf(":%15s:\n", "Hello, world!");
+    ft_printf(":%.10s:\n", "Hello, world!");
+    ft_printf(":%-10s:\n", "Hello, world!");
+    ft_printf(":%-15s:\n", "Hello, world!");
+    ft_printf(":%.15s:\n", "Hello, world!");
+    ft_printf(":%15.10s:\n", "Hello, world!");
+    ft_printf(":%-15.10s:\n", "Hello, world!");
+
 
 
 /*
