@@ -272,9 +272,11 @@ void convert_float_to_string(s_array *array, double to_convert, int precision, i
     double floating_num = 0;
     int decimal = 0;
     int power_of_ten = 0;
+    int is_justify = (array->array[0]=='l')?TRUE : FALSE;
 
     power_of_ten = get_power_of_ten(to_convert);
     if (variable_type != 'f') { to_convert = get_scientific_notation(to_convert, power_of_ten); }
+
 
 
     integer = (int) to_convert;
@@ -287,7 +289,8 @@ void convert_float_to_string(s_array *array, double to_convert, int precision, i
     if ((power_of_ten < 0) & (variable_type == 'f') && (integer == 0)) {
         add_char(array, (power_of_ten * -1 - 1), '0');
     }
-    convert_to_string(array, decimal, FALSE, -(width_precision - precision));
+    convert_to_string(array, decimal, FALSE,0);
+    if(is_justify){add_char(array,-(width_precision + array->used),' ');}
     (decimal == 0) ? add_char(array, precision - 1, '0') : ' ';
     (variable_type != 'f') ? add_power_of_ten_precision(array, power_of_ten, variable_type) : ' ';
 }
