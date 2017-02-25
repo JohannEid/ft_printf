@@ -123,6 +123,7 @@ void convert_to_string(s_array *array, int num_to_convert, int is_signed, int wi
     int compteur = 0;
     int unumber_to_conv;
     s_array buffer_array;
+    s_array *ptr = array;
 
     init_array(&buffer_array, 1);
 
@@ -143,9 +144,15 @@ void convert_to_string(s_array *array, int num_to_convert, int is_signed, int wi
     }
     string_reverse(&buffer_array);
     width -= buffer_array.used;
-    add_char(array, width , ' ');
-
-    concatenate(array, &buffer_array);
+    if (array->array[0] != 'l') {
+        add_char(array, width, ' ');
+        concatenate(array, &buffer_array);
+    } else if (array->array[0] == 'l') {
+        reinitialise_array(array);
+        array = ptr;
+        concatenate(array, &buffer_array);
+        add_char(array, width, ' ');
+    }
     free_array(&buffer_array);
 }
 
@@ -261,13 +268,13 @@ int len_of(const char *array) {
 void convert_float_to_string(s_array *array, double to_convert, int precision, int width_precision,
                              char variable_type) {
     int spaces = 0;
-    int integer = 0 ;
+    int integer = 0;
     double floating_num = 0;
-    int decimal = 0 ;
+    int decimal = 0;
     int power_of_ten = 0;
 
     power_of_ten = get_power_of_ten(to_convert);
-  if(variable_type !='f'){to_convert = get_scientific_notation(to_convert, power_of_ten);}
+    if (variable_type != 'f') { to_convert = get_scientific_notation(to_convert, power_of_ten); }
 
 
     integer = (int) to_convert;
@@ -278,8 +285,9 @@ void convert_float_to_string(s_array *array, double to_convert, int precision, i
     convert_to_string(array, integer, TRUE, width_precision - precision);
     insert_in_array(array, '.');
     if ((power_of_ten < 0) & (variable_type == 'f') && (integer == 0)) {
-        add_char(array, (power_of_ten * -1 - 1), '0');}
-    convert_to_string(array, decimal, FALSE, 0);
+        add_char(array, (power_of_ten * -1 - 1), '0');
+    }
+    convert_to_string(array, decimal, FALSE, -(width_precision - precision));
     (decimal == 0) ? add_char(array, precision - 1, '0') : ' ';
     (variable_type != 'f') ? add_power_of_ten_precision(array, power_of_ten, variable_type) : ' ';
 }
@@ -305,7 +313,8 @@ void convert_to_octal_or_dec(s_array *array, unsigned int to_convert, int is_oct
     } else {
         rest = quotient;
         insert_in_array(array, match_int_to_char(rest));
-        string_reverse(array); }
+        string_reverse(array);
+    }
 }
 
 char match_int_to_char(char to_match) {
@@ -332,9 +341,9 @@ void add_power_of_ten_precision(s_array *array, int power_of_ten, char var) {
 }
 
 
-double get_scientific_notation(double to_get_power,int power_of_ten) {
+double get_scientific_notation(double to_get_power, int power_of_ten) {
 
-    return to_get_power * power(10,-power_of_ten);
+    return to_get_power * power(10, -power_of_ten);
 }
 
 
@@ -391,6 +400,7 @@ void int_formating(s_array *text_array, s_array *flags, int my_int, int width) {
 void float_formating(s_array *text_array, s_array *flags, double my_double, char var_arg,
                      int after_point, int before_point) {
     char temp;
+    before_point = (check_in('-',flags->array,flags->used))? -(before_point):before_point;
     if ((var_arg == 'g') || (var_arg == 'G')) {
         temp = 'f';
     } else { temp = var_arg; }
@@ -443,6 +453,10 @@ void flag_insertion(s_array *text_array, s_array *flags, double flag_conditions,
             insert_in_array(text_array, '0');
             insert_in_array(text_array, type_format);
         }
+    }
+    if (check_in('-', flags->array, flags->used)) {
+        //we have to add smthing to signal we want left_justify
+        insert_in_array(text_array, 'l');
     }
 }
 
