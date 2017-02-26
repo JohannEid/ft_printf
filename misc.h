@@ -43,7 +43,7 @@ int len_of(const char *array);
 void convert_float_to_string(s_array *array, double to_convert, int precision, int width_precision,
                              char variabe_type);
 
-void convert_to_octal_or_dec(s_array *array, unsigned int to_convert, int is_octal,int width, int is_upper);
+void convert_to_octal_or_hexa(s_array *array, unsigned int to_convert, int is_octal,int width, int is_upper);
 
 char match_int_to_char(char to_match,int is_upper);
 
@@ -78,6 +78,8 @@ void fill_blank_space(s_array *text_array);
 int get_power_of_ten(double to_get_power);
 
 char lower(char to_lower);
+
+void handle_g_float_precision(s_array *text_array,int precision);
 
 
 

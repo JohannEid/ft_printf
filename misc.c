@@ -161,12 +161,14 @@ void convert_to_string(s_array *array, int num_to_convert, int is_signed, int wi
 }
 
 void string_reverse(s_array *to_reverse) {
+    char digits[] = {'a','b','c','d','e','f',
+            'A','B','C','D','E','F','0','1','2','3','4','5','6','7','8','9'};
     if (to_reverse->used == 0)
         return;
     char copy;
 
     int i = (to_reverse->array[1] == 'X') ? 2 : (to_reverse->array[1] == 'x') ? 2 :
-                                                (isdigit(to_reverse->array[0])) ? 0 : 1;
+                                                (check_in(to_reverse->array[0],digits,21)) ? 0 : 1;
     int j = to_reverse->used - 1;
 
     while (i <= j) {
@@ -287,10 +289,11 @@ void convert_float_to_string(s_array *array, double to_convert, int precision, i
     if (is_justify) { add_char(array, -(width_precision + array->used), ' '); }
     (decimal == 0) ? add_char(array, precision - 1, '0') : ' ';
     (variable_type != 'f') ? add_power_of_ten_precision(array, power_of_ten, variable_type) : ' ';
+
 }
 
 // maybe I should have made a function for each but process so similar seems like a waste ..
-void convert_to_octal_or_dec(s_array *array, unsigned int to_convert, int is_octal, int width, int is_upper) {
+void convert_to_octal_or_hexa(s_array *array, unsigned int to_convert, int is_octal, int width, int is_upper) {
     char rest = '0';
     int quotient = to_convert;
     unsigned int result = 0;
@@ -300,7 +303,8 @@ void convert_to_octal_or_dec(s_array *array, unsigned int to_convert, int is_oct
     while (quotient >= div) {
         rest = quotient % div;
         quotient = (quotient - rest) / div;
-        (is_octal) ? result += rest * power(10, compteur) : insert_in_array(array, match_int_to_char(rest, is_upper));
+        (is_octal) ? result += rest * power(10, compteur) :
+        insert_in_array(array, match_int_to_char(rest, is_upper));
         ++compteur;
     }
     if (is_octal) {
@@ -412,6 +416,7 @@ void float_formating(s_array *text_array, s_array *flags, double my_double, char
         } else { text_array->used -= 1; }
     }
     flag_insertion_end(text_array, flags, my_double, var_arg);
+    if ((var_arg == 'G') || (var_arg == 'g')) { handle_g_float_precision(text_array, after_point + 1); }
 
 
     free_array(flags);
@@ -424,7 +429,7 @@ void hexa_octa_formating(s_array *text_array, s_array *flags, unsigned int to_co
     is_upper = (var_arg == 'X') ? TRUE : FALSE;
     is_octa = (var_arg == 'o') ? TRUE : FALSE;
     flag_insertion(text_array, flags, to_convert, var_arg);
-    convert_to_octal_or_dec(text_array, to_convert, is_octa, width, is_upper);
+    convert_to_octal_or_hexa(text_array, to_convert, is_octa, width, is_upper);
     flag_insertion_end(text_array, flags, to_convert, var_arg);
 
 }
@@ -498,9 +503,10 @@ void fill_blank_space(s_array *text_array) {
     for (int i = 0; i < text_array->used; ++i) {
         if ((text_array->array[i] == '-') || (text_array->array[i] == '+')) { point_reached = TRUE; }
         else if (!is_signed) {
-            (text_array->array[i] == ' ') ? text_array->array[i] = '0' : ' '; }
-        else if  (point_reached) {
-            (text_array->array[i] == ' ') ? text_array->array[i] = '0' : ' '; }
+            (text_array->array[i] == ' ') ? text_array->array[i] = '0' : ' ';
+        } else if (point_reached) {
+            (text_array->array[i] == ' ') ? text_array->array[i] = '0' : ' ';
+        }
         if (check_in(text_array->array[i], digits, 10)) { break; }
     }
 }
@@ -511,3 +517,9 @@ char lower(char to_lower) {
         to_lower += 32;
     return to_lower;
 }
+
+void handle_g_float_precision(s_array *text_array, int precision) {
+    text_array->used -= precision;
+    text_array->used -= (text_array->array[text_array->used - 1] == '.') ? 1 : 0;
+}
+
