@@ -147,7 +147,7 @@ void convert_to_string(s_array *array, int num_to_convert, int is_signed, int wi
         ++compteur;
     }
     string_reverse(&buffer_array);
-    width -= buffer_array.used;
+    width -= (buffer_array.used + array->used);
     if (array->array[0] != 'l') {
         add_char(array, width, ' ');
         concatenate(array, &buffer_array);
@@ -161,14 +161,14 @@ void convert_to_string(s_array *array, int num_to_convert, int is_signed, int wi
 }
 
 void string_reverse(s_array *to_reverse) {
-    char digits[] = {'a','b','c','d','e','f',
-            'A','B','C','D','E','F','0','1','2','3','4','5','6','7','8','9'};
+    char digits[] = {'a', 'b', 'c', 'd', 'e', 'f',
+                     'A', 'B', 'C', 'D', 'E', 'F', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
     if (to_reverse->used == 0)
         return;
     char copy;
 
     int i = (to_reverse->array[1] == 'X') ? 2 : (to_reverse->array[1] == 'x') ? 2 :
-                                                (check_in(to_reverse->array[0],digits,21)) ? 0 : 1;
+                                                (check_in(to_reverse->array[0], digits, 21)) ? 0 : 1;
     int j = to_reverse->used - 1;
 
     while (i <= j) {
@@ -416,7 +416,9 @@ void float_formating(s_array *text_array, s_array *flags, double my_double, char
         } else { text_array->used -= 1; }
     }
     flag_insertion_end(text_array, flags, my_double, var_arg);
-    if ((var_arg == 'G') || (var_arg == 'g')) { handle_g_float_precision(text_array, after_point + 1); }
+    if ((var_arg == 'G') || (var_arg == 'g') && (after_point != 0)) {
+        handle_g_float_precision(text_array, after_point + 1);
+    }
 
 
     free_array(flags);
@@ -440,6 +442,9 @@ void flag_insertion_end(s_array *text_array, s_array *flags, double flag_conditi
     if ((check_in(type_format, number_types, 10)) &&
         (check_in('0', flags->array, flags->used))) {
         fill_blank_space(text_array);
+    } else if (((text_array->array[0] == '+') ||
+                (text_array->array[0] == '-')) && (text_array->array[1] == ' ')) {
+        relocate_sign(text_array);
     }
 }
 
@@ -471,10 +476,8 @@ void suppress_trailing_zeros(s_array *text_array) {
     int trailing_zeros = 0;
     int counter;
     if (!is_decimal(text_array->array)) { return; }
-    if (text_array->array[text_array->used - 1] != '0') { return; }
-    counter = text_array->used - 1;
+    counter = (is_signed(text_array)) ? text_array->used - 1 : text_array->used -2 ;
     while ((text_array->array[counter] == '0') || (text_array->array[counter] == '.')) {
-
         ++trailing_zeros;
         if (text_array->array[counter] == '.') {
             break;
@@ -506,8 +509,7 @@ void fill_blank_space(s_array *text_array) {
             (text_array->array[i] == ' ') ? text_array->array[i] = '0' : ' ';
         } else if (point_reached) {
             (text_array->array[i] == ' ') ? text_array->array[i] = '0' : ' ';
-        }
-        if (check_in(text_array->array[i], digits, 10)) { break; }
+        } else if (check_in(text_array->array[i], digits, 10)) { break; }
     }
 }
 
@@ -519,7 +521,28 @@ char lower(char to_lower) {
 }
 
 void handle_g_float_precision(s_array *text_array, int precision) {
+    if ((precision > text_array->used) || (text_array->used - precision < 3)) { return; }
     text_array->used -= precision;
     text_array->used -= (text_array->array[text_array->used - 1] == '.') ? 1 : 0;
+}
+
+void relocate_sign(s_array *text_array) {
+    char sign = text_array->array[0];
+    text_array->array[0] = ' ';
+    int compteur = 0;
+
+    while (text_array->array[compteur] == ' ') {
+        ++compteur;
+    }
+    text_array->array[compteur - 1] = sign;
+
+}
+
+int is_signed(s_array *text_array) {
+    if (check_in('-', text_array->array, text_array->used) ||
+        (check_in('+', text_array->array, text_array->used))) {
+        return TRUE;
+    }
+    return FALSE;
 }
 

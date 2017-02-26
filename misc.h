@@ -81,6 +81,10 @@ char lower(char to_lower);
 
 void handle_g_float_precision(s_array *text_array,int precision);
 
+void relocate_sign(s_array *text_array);
+
+int is_signed(s_array *text_array);
+
 
 
 //void replace
