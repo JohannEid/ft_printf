@@ -1,7 +1,15 @@
 cmake_minimum_required(VERSION 3.6)
-project(printf_project)
+project(printf_project_)
 
-set(CMAKE_C_STANDARD 99)
+set(CMAKE_CXX_STANDARD 11)
 
-set(SOURCE_FILES main.c misc.c misc.h dynamic_array.c dynamic_array.h node.c node.h)
-add_executable(printf_project ${SOURCE_FILES} dynamic_array.c dynamic_array.h)
+set(SOURCE_FILES
+        dynamic_array.c
+        dynamic_array.h
+        main.c
+        misc.c
+        misc.h
+        services.c
+        services.h)
+
+add_executable(printf_project_ ${SOURCE_FILES})

@@ -148,16 +148,16 @@ void convert_to_string(s_array *array, int num_to_convert, int is_signed, int wi
     }
     string_reverse(&buffer_array);
     width -= (buffer_array.used + array->used);
-    if (array->array[0] != 'l') {
-        add_char(array, width, ' ');
-        concatenate(array, &buffer_array);
-    } else if ((check_in('l', array->array, array->used))) {
-        reinitialise_array(array);
-        array = ptr;
-        concatenate(array, &buffer_array);
-        add_char(array, width, ' ');
-    }
-    free_array(&buffer_array);
+
+        if (array->array[0] != 'l') {
+            add_char(array, width, ' ');
+            concatenate(array, &buffer_array);
+        } else if ((check_in('l', array->array, array->used))) {
+            reinitialise_array(array);
+            array = ptr;
+            concatenate(array, &buffer_array);
+            add_char(array, width, ' ');
+        }
 }
 
 void string_reverse(s_array *to_reverse) {
@@ -385,6 +385,7 @@ void unsigned_int_formating(s_array *text_array, s_array *flags, unsigned int ui
 
     flag_insertion(text_array, flags, uint, 'u');
     convert_to_string(text_array, uint, TRUE, width);
+    // if(text_array->used > 0) {}
     if (text_array->array[0] == '-') {
         write(2, msg_error, sizeof(msg_error)) != sizeof(msg_error);
     }
@@ -397,12 +398,10 @@ void int_formating(s_array *text_array, s_array *flags, int my_int, int width) {
     flag_insertion(text_array, flags, my_int, 'd');
     convert_to_string(text_array, my_int, TRUE, width);
     flag_insertion_end(text_array, flags, my_int, 'd');
-
 }
 
 void float_formating(s_array *text_array, s_array *flags, double my_double, char var_arg,
                      int after_point, int before_point) {
-
     char temp;
     before_point = (check_in('-', flags->array, flags->used)) ? -(before_point) : before_point;
     if ((var_arg == 'g') || (var_arg == 'G')) {
@@ -419,10 +418,7 @@ void float_formating(s_array *text_array, s_array *flags, double my_double, char
     if ((var_arg == 'G') || (var_arg == 'g') && (after_point != 0)) {
         handle_g_float_precision(text_array, after_point + 1);
     }
-
-
     free_array(flags);
-
 }
 
 void hexa_octa_formating(s_array *text_array, s_array *flags, unsigned int to_convert, char var_arg, int width) {
@@ -439,6 +435,8 @@ void hexa_octa_formating(s_array *text_array, s_array *flags, unsigned int to_co
 void flag_insertion_end(s_array *text_array, s_array *flags, double flag_conditions, char type_format) {
     char number_types[] = {'d', 'i', 'X', 'x', 'u', 'f', 'e', 'E', 'g', 'G'};
 
+    if (flags->used == 0) { return; }
+
     if ((check_in(type_format, number_types, 10)) &&
         (check_in('0', flags->array, flags->used))) {
         fill_blank_space(text_array);
@@ -449,7 +447,7 @@ void flag_insertion_end(s_array *text_array, s_array *flags, double flag_conditi
 }
 
 void flag_insertion(s_array *text_array, s_array *flags, double flag_conditions, char type_format) {
-
+    if (flags->used == 0) { return; }
     if ((type_format != 'X') && (type_format != 'x') && (type_format != 'o')) {
         if (check_in('+', flags->array, flags->used) && (flag_conditions >= 0)) {
             insert_in_array(text_array, '+');
@@ -476,7 +474,7 @@ void suppress_trailing_zeros(s_array *text_array) {
     int trailing_zeros = 0;
     int counter;
     if (!is_decimal(text_array->array)) { return; }
-    counter = (is_signed(text_array)) ? text_array->used - 1 : text_array->used -2 ;
+    counter = (is_signed(text_array)) ? text_array->used - 1 : text_array->used - 2;
     while ((text_array->array[counter] == '0') || (text_array->array[counter] == '.')) {
         ++trailing_zeros;
         if (text_array->array[counter] == '.') {
@@ -514,7 +512,6 @@ void fill_blank_space(s_array *text_array) {
 }
 
 char lower(char to_lower) {
-
     if ((to_lower >= 65) && (to_lower <= 90))
         to_lower += 32;
     return to_lower;

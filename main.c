@@ -60,6 +60,7 @@ int main() {
     printf("Unsigned value: %u\n", 150);
     printf("Just print the percentage sign %%\n", 10);
 
+
     printf("\nMY PRINTF\n");
 
     ft_printf("The color: %s\n", "blue");
@@ -72,7 +73,81 @@ int main() {
     ft_printf("Unsigned value: %u\n", 150);
     ft_printf("Just print the percentage sign %%\n", 10);
 
-    */
+
+
+
+
+    printf( "%.3f\n%.3g\n%.3f\n%.3g\n", 100.2, 100.2, 3.1415926, 3.1415926 );
+
+    printf("\nMY PRINTF\n");
+
+    ft_printf( "%.3f\n%.3g\n%.3f\n%.3g\n", 100.2, 100.2, 3.1415926, 3.1415926 );
+
+    printf( "%#x\n", 1225 );
+    printf( "%#X\n", 1343 );
+    printf( "%#o\n", 145245 );
+    printf( "%x\n", 827 );
+    printf( "%X\n", 13242 );
+    printf( "%o\n", 239085 );
+
+    printf("\nMY PRINTF\n");
+
+    ft_printf( "%#x\n", 1225 );
+    ft_printf( "%#X\n", 1343 );
+    ft_printf( "%#o\n", 145245 );
+    ft_printf( "%x\n", 827 );
+    ft_printf( "%X\n", 13242 );
+    ft_printf( "%o\n", 239085 );
+
+
+    for( char ch = 75 ; ch <= 100; ch++ )
+    {
+        printf("ASCII value = %d, Character = %c\n", ch , ch );
+    }
+    printf("\nMY PRINTF\n");
+    for( char ch = 75 ; ch <= 100; ch++ )
+    {
+        ft_printf("ASCII value = %d, Character = %c\n", ch , ch );
+    }
+
+
+
+    printf("demostrate some flags  %+010d\n", 14132);
+    printf("demostrate some flags  %010d\n", 14132);
+    printf("demostrate some flags  %10d\n", 14132);
+    printf("demostrate some flags  %+10d\n", 14132);
+    printf("demostrate some flags  %+10.5f\n", 10.32);
+    printf("demostrate some flags  %+10.4f\n", -15.25);
+    printf("demostrate some flags  %+g\n", 10.32);
+    printf("demostrate some flags  %+g\n", -15.25);
+    printf("demostrate some flags  %-10G hey there \n", 10.32);
+    printf("demostrate some flags  %-10G spaces work ? \n", -15.25);
+    printf("demonstrate power numbers %e\n",1414.523);
+    printf("demonstrate power numbers %+E\n",145.25235);
+    printf("demonstrate power numbers %+E\n",0.0015);
+
+
+    printf("\nMY PRINTF\n");
+
+    ft_printf("demostrate some flags  %+010d\n", 14132);
+    ft_printf("demostrate some flags  %010d\n", 14132);
+    ft_printf("demostrate some flags  %10d\n", 14132);
+    ft_printf("demostrate some flags  %+10d\n", 14132);
+    ft_printf("demostrate some flags  %+g\n", 10.32);
+    ft_printf("demostrate some flags  %+g\n", -15.25);
+    ft_printf("demostrate some flags  %-10G hey there \n", 10.32);
+    ft_printf("demostrate some flags  %-10g spaces work ? \n", -15.25);
+
+    ft_printf("demonstrate power numbers %e\n",1414.523);
+    ft_printf("demonstrate power numbers %+E\n",145.25235);
+    ft_printf("demonstrate power numbers %+E\n",0.0015);
+
+
+
+
+ft_printf("%E ,%E",10.425,10.425);
+
+
 
     for (Fahrenheit = 0; Fahrenheit <= 300; Fahrenheit = Fahrenheit + 20)
         printf("%3d %06.3f\n", Fahrenheit, (5.0/9.0)*(Fahrenheit-32));
@@ -81,30 +156,11 @@ int main() {
 
     for (Fahrenheit = 0; Fahrenheit <= 300; Fahrenheit = Fahrenheit + 20)
         ft_printf("%3d %06.3f\n", Fahrenheit, (5.0/9.0)*(Fahrenheit-32));
+*/
 
 
 
-    /* printf("%6.3f", (5.0 / 9.0) * (20 - 32));
-     printf("\n");
-     ft_printf("%6.3f", -0.402);
- */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+ft_printf("%E %E",10.543,10.543);
 
 
 
