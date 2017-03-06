@@ -11,6 +11,7 @@ void ft_printf(char *to_print, ...) {
     //loop variable
     int i = 0;
     char my_flags[5] = {'-', '+', ' ', '#', '0',};
+    char my_digits[10]= {'0','1','2','3','4','5','6','7','8','9'};
     //initialise our dynamic array to story char into it
     s_array char_array;
     s_array flag_array;
@@ -38,10 +39,10 @@ void ft_printf(char *to_print, ...) {
                 insert_in_array(&flag_array, to_print[i]);
                 ++i;
             }
-            while (isdigit(to_print[i]) || (to_print[i] == '.')) {
+            while ((check_in(to_print[i],my_digits,10)) || (to_print[i] == '.')) {
                 if (to_print[i] == '.') {
                     point_reached++;
-                } else if (isdigit(to_print[i])) {
+                } else if (check_in(to_print[i],my_digits,10)) {
                     (!point_reached) ? insert_in_array(&digits_before_point, to_print[i]) :
                     insert_in_array(&digits_after_point, to_print[i]);
                 }
@@ -72,7 +73,6 @@ void ft_printf(char *to_print, ...) {
 void format_output(char variable_type, va_list argument_list,
                    s_array *digits_before_point, s_array *digits_after_point, s_array *flags) {
 
-    const char *string_argument;
     s_array array;
     init_array(&array, 1);
     //for precision of string and float
@@ -80,7 +80,6 @@ void format_output(char variable_type, va_list argument_list,
     //after will max width for string and number of digit after coma for float
     int before_point = convert_string_to_int(digits_before_point);
     int after_point = convert_string_to_int(digits_after_point);
-    double scien_notation = 0;
     switch (variable_type) {
         case 'u':
             unsigned_int_formating(&array, flags, va_arg(argument_list, unsigned
@@ -116,6 +115,8 @@ void format_output(char variable_type, va_list argument_list,
             break;
         case '%':
             insert_in_array(&array, '%');
+        default:
+            break;
     }
     screen_output(array.array, array.used);
     free_array(&array);
@@ -123,9 +124,8 @@ void format_output(char variable_type, va_list argument_list,
 
 
 void convert_to_string(s_array *array, int num_to_convert, int is_signed, int width) {
-    char digit;
+    int digit;
     int compteur = 0;
-    int unumber_to_conv;
     s_array buffer_array;
     s_array *ptr = array;
 
@@ -215,7 +215,7 @@ void screen_output(char *to_output, size_t bits) {
 
 
 int convert_string_to_int(s_array *array_to_convert) {
-    int value = 0;
+     int value = 0;
     if (array_to_convert->used == 0) { return 0; }
 
     for (int i = 0; i < array_to_convert->used; ++i) {

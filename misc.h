@@ -51,7 +51,6 @@ void add_power_of_ten_precision(s_array *array, int power_of_ten, char var);
 
 double get_scientific_notation(double to_get_power,int power_of_ten);
 //for decimal numbers
-int number_of_zeros(double to_get_zeros);
 
 int check_in (char to_check,   char tab_check[], int size_of_tab);
 

@@ -17,15 +17,8 @@ X 	Unsigned hexadecimal integer (capital letters)
 */
 
 int main() {
-    float number2 = -2;
-    int number3 = -161235;
-    char letter = 'a';
-    int number = 345;
-    int unumber = 356;
-    double my_double = -0.00253514;
-    double my_double_1 = 0.253514;
-    char project_review[] = "this project is awesome!!";
-    int Fahrenheit;
+int Fahrenheit;
+  //  ft_printf("%E %E %E",10.543,10.543,10.543);
 
 
 /*
@@ -48,7 +41,8 @@ int main() {
     ft_printf(":%.15s:\n", "Hello, world!");
     ft_printf(":%15.10s:\n", "Hello, world!");
     ft_printf(":%-15.10s:\n", "Hello, world!");
-
+*/
+    /*
 
     printf("The color: %s\n", "blue");
     printf("First number: %d\n", 12345);
@@ -142,11 +136,7 @@ int main() {
     ft_printf("demonstrate power numbers %+E\n",145.25235);
     ft_printf("demonstrate power numbers %+E\n",0.0015);
 
-
-
-
-ft_printf("%E ,%E",10.425,10.425);
-
+*/
 
 
     for (Fahrenheit = 0; Fahrenheit <= 300; Fahrenheit = Fahrenheit + 20)
@@ -156,11 +146,10 @@ ft_printf("%E ,%E",10.425,10.425);
 
     for (Fahrenheit = 0; Fahrenheit <= 300; Fahrenheit = Fahrenheit + 20)
         ft_printf("%3d %06.3f\n", Fahrenheit, (5.0/9.0)*(Fahrenheit-32));
-*/
 
 
 
-ft_printf("%E %E",10.543,10.543);
+
 
 
 

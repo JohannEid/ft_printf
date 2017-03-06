@@ -34,7 +34,6 @@ void free_array(s_array *my_array) {
     my_array->array = NULL;
     my_array->used = 0;
     my_array->size = 0;
-
 }
 
 void reinitialise_array(s_array *to_reint) {
@@ -43,11 +42,10 @@ void reinitialise_array(s_array *to_reint) {
 }
 
 void concatenate(s_array *left, s_array *right) {
-    for (int i = 0; i < len_of(right->array); ++i) {
+    for (int i = 0; i < right->used; ++i) {
         insert_in_array(left, right->array[i]);
     }
     free_array(right);
-
 }
 
 
